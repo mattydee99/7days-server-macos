@@ -1,0 +1,26 @@
+services:
+  7days:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    platform: linux/amd64
+    container_name: 7days
+    restart: unless-stopped
+    stop_grace_period: 5m
+    ports:
+      - "26900:26900/tcp"
+      - "26900:26900/udp"
+      - "26901:26901/udp"
+      - "26902:26902/udp"
+    volumes:
+      - ./config/serverconfig.xml:/config/serverconfig.xml:ro
+      - ./saves:/home/steam/.local/share/7DaysToDie/Saves
+      - game_files:/opt/7days
+    environment:
+      - S3_BACKUP_BUCKET=${S3_BACKUP_BUCKET}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-west-2}
+
+volumes:
+  game_files:
