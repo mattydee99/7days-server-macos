@@ -19,6 +19,16 @@ RUN git clone --depth=1 https://github.com/ptitSeb/box64 /box64 \
 # x86_64 system libraries for box64 to use
 FROM --platform=linux/amd64 ubuntu:22.04 AS x86_64-libs
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libatomic1 \
+        libasound2 \
+        libpulse0 \
+        libx11-6 \
+        libxcursor1 \
+        libxrandr2 \
+        libxi6 \
+    && rm -rf /var/lib/apt/lists/*
+
 # ----
 
 FROM --platform=linux/arm64 ubuntu:22.04
