@@ -9,8 +9,8 @@
 
   <!-- Network -->
   <property name="ServerPort"                      value="26900" />
-  <property name="ServerVisibility"                value="1" />
-  <property name="ServerDisabledNetworkProtocols"  value="SteamNetworking" />
+  <property name="ServerVisibility"                value="0" />
+  <property name="ServerDisabledNetworkProtocols"  value="SteamNetworking,EOS" />
   <property name="ServerMaxWorldTransferSpeedKiBs" value="512" />
 
   <!-- Slots -->
