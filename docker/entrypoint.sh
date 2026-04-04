@@ -29,7 +29,7 @@ trap shutdown SIGTERM SIGINT
 echo "[server] Starting 7 Days to Die..."
 envsubst < /config/serverconfig.xml > /tmp/serverconfig.xml
 
-"$GAME_DIR/7DaysToDieServer.x86_64" \
+box64 "$GAME_DIR/7DaysToDieServer.x86_64" \
     -configfile=/tmp/serverconfig.xml \
     -logfile /dev/stdout \
     -batchmode \
