@@ -29,12 +29,15 @@ trap shutdown SIGTERM SIGINT
 echo "[server] Starting 7 Days to Die..."
 envsubst < /config/serverconfig.xml > /tmp/serverconfig.xml
 
-box64 "$GAME_DIR/7DaysToDieServer.x86_64" \
+BOX64_DYNAREC=0 box64 "$GAME_DIR/7DaysToDieServer.x86_64" \
     -configfile=/tmp/serverconfig.xml \
-    -logfile /dev/stdout \
+    -logfile /tmp/7days.log \
     -batchmode \
     -nographics \
     -dedicated &
+
+# Tail the log file to stdout once it appears
+sleep 2 && tail -f /tmp/7days.log &
 
 SERVER_PID=$!
 echo "[server] PID $SERVER_PID"
