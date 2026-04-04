@@ -1,27 +1,37 @@
-FROM --platform=linux/arm64 ubuntu:22.04
+FROM --platform=linux/arm64 ubuntu:22.04 AS box64-builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        python3 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone --depth=1 https://github.com/ptitSeb/box64 /box64 \
+    && cmake -B /box64/build -S /box64 \
+        -DARM_DYNAREC=ON \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    && cmake --build /box64/build -j$(nproc)
+
+# ----
+
+FROM --platform=linux/arm64 ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+COPY --from=box64-builder /box64/build/box64 /usr/local/bin/box64
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
-        gnupg \
         gettext-base \
         awscli \
     && rm -rf /var/lib/apt/lists/*
 
-# Install box64 — translates x86_64 binaries on ARM64 natively
-RUN curl -fsSL https://ryanfortner.github.io/box64-debs/box64.list \
-        -o /etc/apt/sources.list.d/box64.list \
-    && curl -fsSL https://ryanfortner.github.io/box64-debs/KEY.gpg \
-        | gpg --dearmor -o /usr/share/keyrings/box64-debs-archive-keyring.gpg \
-    && apt-get update \
-    && apt-get install -y box64-arm64 \
-    && rm -rf /var/lib/apt/lists/*
-
 RUN useradd -m -s /bin/bash steam
 
-# Copy pre-downloaded Linux x86_64 server files
 COPY --chown=steam:steam server/ /opt/7days/
 
 RUN mkdir -p /home/steam/.local/share/7DaysToDie/Saves \
