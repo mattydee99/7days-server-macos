@@ -1,2 +1,4 @@
 .env
 saves/
+docker/7days-server/
+server/

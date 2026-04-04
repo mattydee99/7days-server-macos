@@ -3,7 +3,6 @@ set -e
 
 GAME_DIR="/opt/7days"
 SAVES_DIR="/home/steam/.local/share/7DaysToDie/Saves"
-APP_ID="294420"
 
 backup() {
     if [ -n "$S3_BACKUP_BUCKET" ]; then
@@ -27,23 +26,7 @@ shutdown() {
 
 trap shutdown SIGTERM SIGINT
 
-# Install on first run, update on subsequent runs
-if [ ! -f "$GAME_DIR/7DaysToDieServer.x86_64" ]; then
-    echo "[steamcmd] First run — installing 7 Days to Die..."
-    VALIDATE="validate"
-else
-    echo "[steamcmd] Checking for updates..."
-    VALIDATE=""
-fi
-
-/opt/steamcmd/steamcmd.sh \
-    +force_install_dir "$GAME_DIR" \
-    +login anonymous \
-    +app_update "$APP_ID" $VALIDATE \
-    +quit
-
 echo "[server] Starting 7 Days to Die..."
-# Substitute env vars (SERVER_PASSWORD, TELNET_PASSWORD) into config
 envsubst < /config/serverconfig.xml > /tmp/serverconfig.xml
 
 "$GAME_DIR/7DaysToDieServer.x86_64" \
