@@ -1,25 +1,11 @@
-FROM --platform=linux/arm64 ubuntu:22.04 AS box64-builder
+FROM --platform=linux/amd64 ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
         ca-certificates \
-        cmake \
-        git \
-        python3 \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN git clone --depth=1 https://github.com/ptitSeb/box64 /box64 \
-    && cmake -B /box64/build -S /box64 \
-        -DARM_DYNAREC=ON \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    && cmake --build /box64/build -j$(nproc)
-
-# x86_64 system libraries for box64 to use
-FROM --platform=linux/amd64 ubuntu:22.04 AS x86_64-libs
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+        gettext-base \
         libatomic1 \
         libasound2 \
         libpulse0 \
@@ -27,24 +13,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libxcursor1 \
         libxrandr2 \
         libxi6 \
-    && rm -rf /var/lib/apt/lists/*
-
-# ----
-
-FROM --platform=linux/arm64 ubuntu:22.04
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-COPY --from=box64-builder /box64/build/box64 /usr/local/bin/box64
-
-# x86_64 libs in the standard multiarch path — box64 looks here by default
-COPY --from=x86_64-libs /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
-COPY --from=x86_64-libs /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        ca-certificates \
-        curl \
-        gettext-base \
         awscli \
     && rm -rf /var/lib/apt/lists/*
 
