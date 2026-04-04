@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ServerSettings>
+  <!-- Server Identity -->
+  <property name="ServerName"                      value="Dad and Son Server" />
+  <property name="ServerDescription"               value="Private 7 Days to Die Server" />
+  <property name="ServerWebsiteURL"                value="" />
+  <property name="ServerPassword"                  value="${SERVER_PASSWORD}" />
+  <property name="ServerLoginConfirmationText"     value="" />
+
+  <!-- Network -->
+  <property name="ServerPort"                      value="26900" />
+  <property name="ServerVisibility"                value="1" />
+  <property name="ServerDisabledNetworkProtocols"  value="SteamNetworking" />
+  <property name="ServerMaxWorldTransferSpeedKiBs" value="512" />
+
+  <!-- Slots -->
+  <property name="ServerMaxPlayerCount"            value="4" />
+  <property name="ServerReservedSlots"             value="0" />
+  <property name="ServerReservedSlotsPermission"   value="100" />
+  <property name="ServerAdminSlots"                value="0" />
+  <property name="ServerAdminSlotsPermission"      value="0" />
+
+  <!-- Admin/Control Panel -->
+  <property name="WebDashboardEnabled"             value="false" />
+  <property name="WebDashboardPort"                value="8080" />
+  <property name="TelnetEnabled"                   value="false" />
+  <property name="TelnetPort"                      value="8081" />
+  <property name="TelnetPassword"                  value="${TELNET_PASSWORD}" />
+  <property name="TelnetFailedLoginLimit"          value="10" />
+  <property name="TelnetFailedLoginsBlocktime"     value="10" />
+  <property name="TerminalWindowEnabled"           value="false" />
+
+  <!-- World -->
+  <property name="GameWorld"                       value="Navezgane" />
+  <property name="GameName"                        value="shot3dick" />
+  <property name="GameMode"                        value="GameModeSurvival" />
+
+  <!-- Difficulty -->
+  <property name="GameDifficulty"                  value="2" />
+  <property name="BlockDamagePlayer"               value="100" />
+  <property name="BlockDamageAI"                   value="100" />
+  <property name="BlockDamageAIBM"                 value="100" />
+  <property name="XPMultiplier"                    value="100" />
+  <property name="PlayerSafeZoneLevel"             value="5" />
+  <property name="PlayerSafeZoneHours"             value="5" />
+
+  <!-- Multiplayer -->
+  <property name="PartySharedKillRange"            value="10000" />
+  <property name="PlayerKillingMode"               value="0" />
+
+  <!-- Performance -->
+  <property name="MaxSpawnedZombies"               value="64" />
+  <property name="MaxSpawnedAnimals"               value="50" />
+  <property name="ServerMaxAllowedViewDistance"    value="12" />
+  <property name="MaxQueuedMeshLayers"             value="1000" />
+
+  <!-- Misc -->
+  <property name="EACEnabled"                      value="false" />
+  <property name="HideCommandExecutionLog"         value="0" />
+  <property name="MaxUncoveredMapChunksPerPlayer"  value="131072" />
+  <property name="PersistentPlayerProfiles"        value="false" />
+</ServerSettings>

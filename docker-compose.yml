@@ -17,6 +17,8 @@ services:
       - ./saves:/home/steam/.local/share/7DaysToDie/Saves
       - game_files:/opt/7days
     environment:
+      - SERVER_PASSWORD=${SERVER_PASSWORD}
+      - TELNET_PASSWORD=${TELNET_PASSWORD}
       - S3_BACKUP_BUCKET=${S3_BACKUP_BUCKET}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
