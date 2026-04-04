@@ -16,6 +16,9 @@ services:
       - ./config/serverconfig.xml:/config/serverconfig.xml:ro
       - ./saves:/home/steam/.local/share/7DaysToDie/Saves
       - game_files:/opt/7days
+    extra_hosts:
+      - "api.epicgames.dev:127.0.0.1"
+      - "api.epicgames.com:127.0.0.1"
     environment:
       - SERVER_PASSWORD=${SERVER_PASSWORD}
       - TELNET_PASSWORD=${TELNET_PASSWORD}
