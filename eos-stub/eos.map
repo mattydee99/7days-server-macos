@@ -1,0 +1,4 @@
+EOSSDK {
+    global: EOS_*;
+    local: *;
+};
