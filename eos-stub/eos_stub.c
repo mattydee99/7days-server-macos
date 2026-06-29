@@ -84,7 +84,7 @@ int   EOS_EpicAccountId_ToString(void *id, void *b, uint32_t *s){ (void)id;(void
 
 /* ProductUserId */
 void *EOS_ProductUserId_FromString(const char *s) { (void)s; return NULL; }
-int   EOS_ProductUserId_IsValid(void *id)         { (void)id; return 0; }
+int   EOS_ProductUserId_IsValid(void *id)         { (void)id; return 1; }
 int   EOS_ProductUserId_ToString(void *id, void *b, uint32_t *s){ (void)id;(void)b;(void)s; return EOS_Success; }
 
 /* -------------------------------------------------------------------------
@@ -104,7 +104,7 @@ int   EOS_Platform_GetOverrideCountryCode(void *h, void *b, uint32_t *s)        
 int   EOS_Platform_SetOverrideCountryCode(void *h, const char *c)                { (void)h;(void)c; return EOS_Success; }
 int   EOS_Platform_GetOverrideLocaleCode(void *h, void *b, uint32_t *s)          { (void)h;(void)b;(void)s; return EOS_Success; }
 int   EOS_Platform_SetOverrideLocaleCode(void *h, const char *l)                 { (void)h;(void)l; return EOS_Success; }
-int   EOS_Platform_GetDesktopCrossplayStatus(void *h, void *o)                   { (void)h;(void)o; return EOS_NoConnection; }
+int   EOS_Platform_GetDesktopCrossplayStatus(void *h, void *o)                   { (void)h;(void)o; return EOS_Success; }
 
 /* Platform interface getters — all return fake non-null handles */
 void *EOS_Platform_GetAchievementsInterface(void *h)           { (void)h; return _fake; }
@@ -143,27 +143,27 @@ void *EOS_RTC_GetDataInterface(void *h)                        { (void)h; return
  * Auth
  * -------------------------------------------------------------------------*/
 void EOS_Auth_Login(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Auth_Logout(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Auth_LinkAccount(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Auth_DeletePersistentAuth(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Auth_QueryIdToken(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Auth_VerifyIdToken(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Auth_VerifyUserAuth(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Auth_GetLoggedInAccountsCount(void *h)                { (void)h; return 0; }
 void *EOS_Auth_GetLoggedInAccountByIndex(void *h, int i)       { (void)h;(void)i; return NULL; }
 int  EOS_Auth_GetLoginStatus(void *h, void *id)                { (void)h;(void)id; return 0; }
 void *EOS_Auth_GetSelectedAccountId(void *h)                   { (void)h; return NULL; }
 int  EOS_Auth_GetMergedAccountsCount(void *h, void *id)        { (void)h;(void)id; return 0; }
 void *EOS_Auth_GetMergedAccountByIndex(void *h, void *id, int i){ (void)h;(void)id;(void)i; return NULL; }
-int  EOS_Auth_CopyUserAuthToken(void *h, const void *o, void *id, void **t){ (void)h;(void)o;(void)id; if(t)*t=NULL; return EOS_NoConnection; }
-int  EOS_Auth_CopyIdToken(void *h, const void *o, void **t)    { (void)h;(void)o; if(t)*t=NULL; return EOS_NoConnection; }
+int  EOS_Auth_CopyUserAuthToken(void *h, const void *o, void *id, void **t){ (void)h;(void)o;(void)id; if(t)*t=NULL; return EOS_Success; }
+int  EOS_Auth_CopyIdToken(void *h, const void *o, void **t)    { (void)h;(void)o; if(t)*t=NULL; return EOS_Success; }
 void EOS_Auth_Token_Release(void *t)                           { (void)t; }
 void EOS_Auth_IdToken_Release(void *t)                         { (void)t; }
 uint64_t EOS_Auth_AddNotifyLoginStatusChanged(void *h, const void *o, void *cd, eos_cb cb)
@@ -175,39 +175,44 @@ void EOS_Auth_RemoveNotifyLoginStatusChanged(void *h, uint64_t id)
  * Connect
  * -------------------------------------------------------------------------*/
 void EOS_Connect_Login(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_Logout(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_CreateUser(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_LinkAccount(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_UnlinkAccount(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_CreateDeviceId(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_DeleteDeviceId(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_TransferDeviceIdAccount(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_QueryExternalAccountMappings(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_QueryProductUserIdMappings(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Connect_VerifyIdToken(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
+/* The original SDK's EOS_Connect_Login callback returns a LocalUserId.
+   Returning a fake success with no LocalUserId means callers that try
+   to read it will get a null ProductUserId.  That is intentional:
+   crossplay/EOS joining is unsupported; we just want the server to
+   believe its session registration succeeded. */
 int  EOS_Connect_GetLoggedInUsersCount(void *h)                { (void)h; return 0; }
 void *EOS_Connect_GetLoggedInUserByIndex(void *h, int i)       { (void)h;(void)i; return NULL; }
 int  EOS_Connect_GetLoginStatus(void *h, void *id)             { (void)h;(void)id; return 0; }
 int  EOS_Connect_GetProductUserExternalAccountCount(void *h, const void *o) { (void)h;(void)o; return 0; }
-int  EOS_Connect_CopyProductUserExternalAccountByIndex(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
-int  EOS_Connect_CopyProductUserExternalAccountByAccountType(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
-int  EOS_Connect_CopyProductUserExternalAccountByAccountId(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
-int  EOS_Connect_CopyProductUserInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+int  EOS_Connect_CopyProductUserExternalAccountByIndex(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
+int  EOS_Connect_CopyProductUserExternalAccountByAccountType(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
+int  EOS_Connect_CopyProductUserExternalAccountByAccountId(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
+int  EOS_Connect_CopyProductUserInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 void EOS_Connect_ExternalAccountInfo_Release(void *i)          { (void)i; }
 int  EOS_Connect_GetExternalAccountMapping(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_Connect_GetProductUserIdMapping(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_NoConnection; }
-int  EOS_Connect_CopyIdToken(void *h, const void *o, void **t) { (void)h;(void)o; if(t)*t=NULL; return EOS_NoConnection; }
+int  EOS_Connect_GetProductUserIdMapping(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_Success; }
+int  EOS_Connect_CopyIdToken(void *h, const void *o, void **t) { (void)h;(void)o; if(t)*t=NULL; return EOS_Success; }
 void EOS_Connect_IdToken_Release(void *t)                      { (void)t; }
 uint64_t EOS_Connect_AddNotifyAuthExpiration(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o;(void)cd;(void)cb; return 1; }
@@ -221,18 +226,25 @@ void EOS_Connect_RemoveNotifyLoginStatusChanged(void *h, uint64_t id)
 /* -------------------------------------------------------------------------
  * Sessions
  * -------------------------------------------------------------------------*/
-void EOS_Sessions_CreateSessionModification(void *h, const void *o, void **m)
-    { (void)h;(void)o; if(m)*m=_fake; }
-void EOS_Sessions_UpdateSessionModification(void *h, const void *o, void **m)
-    { (void)h;(void)o; if(m)*m=_fake; }
+/* NOTE: these used to fire EOS_NoConnection, but the dedicated server uses
+ *       EOS_Sessions_UpdateSession as a fire-and-forget registration step.
+ *       Returning "no connection" produces a negative result code and the
+ *       server never becomes "ready".  Returning EOS_Success lets the server
+ *       think the session was created/updated; player auth still fails later
+ *       because we have no real accounts, but crossplay/EOS joining was
+ *       already unsupported on this stub. */
+int EOS_Sessions_CreateSessionModification(void *h, const void *o, void **m)
+    { (void)h;(void)o; if(m)*m=_fake; return EOS_Success; }
+int EOS_Sessions_UpdateSessionModification(void *h, const void *o, void **m)
+    { (void)h;(void)o; if(m)*m=_fake; return EOS_Success; }
 void EOS_Sessions_UpdateSession(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sessions_DestroySession(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sessions_JoinSession(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sessions_StartSession(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sessions_EndSession(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sessions_RegisterPlayers(void *h, const void *o, void *cd, eos_cb cb)
@@ -240,20 +252,20 @@ void EOS_Sessions_RegisterPlayers(void *h, const void *o, void *cd, eos_cb cb)
 void EOS_Sessions_UnregisterPlayers(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sessions_SendInvite(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sessions_RejectInvite(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sessions_QueryInvites(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Sessions_GetInviteCount(void *h, const void *o)       { (void)h;(void)o; return 0; }
-int  EOS_Sessions_GetInviteIdByIndex(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_NoConnection; }
+int  EOS_Sessions_GetInviteIdByIndex(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_Success; }
 int  EOS_Sessions_CreateSessionSearch(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=_fake; return EOS_Success; }
 int  EOS_Sessions_DumpSessionState(void *h, const char *n)     { (void)h;(void)n; return EOS_Success; }
 int  EOS_Sessions_IsUserInSession(void *h, const char *n, void *id){ (void)h;(void)n;(void)id; return 0; }
-int  EOS_Sessions_CopyActiveSessionHandle(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
-int  EOS_Sessions_CopySessionHandleByInviteId(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
-int  EOS_Sessions_CopySessionHandleByUiEventId(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
-int  EOS_Sessions_CopySessionHandleForPresence(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
+int  EOS_Sessions_CopyActiveSessionHandle(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
+int  EOS_Sessions_CopySessionHandleByInviteId(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
+int  EOS_Sessions_CopySessionHandleByUiEventId(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
+int  EOS_Sessions_CopySessionHandleForPresence(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
 uint64_t EOS_Sessions_AddNotifySessionInviteReceived(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o;(void)cd;(void)cb; return 1; }
 uint64_t EOS_Sessions_AddNotifySessionInviteAccepted(void *h, const void *o, void *cd, eos_cb cb)
@@ -285,20 +297,20 @@ int  EOS_SessionModification_SetAllowedPlatformIds(void *m, const void *o){ (voi
 void EOS_SessionDetails_Release(void *h)                        { (void)h; }
 void EOS_SessionDetails_Info_Release(void *i)                   { (void)i; }
 void EOS_SessionDetails_Attribute_Release(void *a)              { (void)a; }
-int  EOS_SessionDetails_CopyInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+int  EOS_SessionDetails_CopyInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 int  EOS_SessionDetails_GetSessionAttributeCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_SessionDetails_CopySessionAttributeByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
-int  EOS_SessionDetails_CopySessionAttributeByKey(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
+int  EOS_SessionDetails_CopySessionAttributeByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
+int  EOS_SessionDetails_CopySessionAttributeByKey(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
 void EOS_ActiveSession_Release(void *h)                         { (void)h; }
 void EOS_ActiveSession_Info_Release(void *i)                    { (void)i; }
-int  EOS_ActiveSession_CopyInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+int  EOS_ActiveSession_CopyInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 int  EOS_ActiveSession_GetRegisteredPlayerCount(void *h, const void *o){ (void)h;(void)o; return 0; }
 void *EOS_ActiveSession_GetRegisteredPlayerByIndex(void *h, const void *o){ (void)h;(void)o; return NULL; }
 void EOS_SessionSearch_Release(void *h)                         { (void)h; }
 void EOS_SessionSearch_Find(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_SessionSearch_GetSearchResultCount(void *h)            { (void)h; return 0; }
-int  EOS_SessionSearch_CopySearchResultByIndex(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
+int  EOS_SessionSearch_CopySearchResultByIndex(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
 int  EOS_SessionSearch_SetSessionId(void *h, const void *o)    { (void)h;(void)o; return EOS_Success; }
 int  EOS_SessionSearch_SetTargetUserId(void *h, const void *o) { (void)h;(void)o; return EOS_Success; }
 int  EOS_SessionSearch_SetParameter(void *h, const void *o)    { (void)h;(void)o; return EOS_Success; }
@@ -309,44 +321,44 @@ int  EOS_SessionSearch_SetMaxResults(void *h, const void *o)   { (void)h;(void)o
  * Lobby
  * -------------------------------------------------------------------------*/
 void EOS_Lobby_CreateLobby(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_DestroyLobby(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_JoinLobby(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_JoinLobbyById(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_LeaveLobby(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_UpdateLobby(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_PromoteMember(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_KickMember(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_SendInvite(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_RejectInvite(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_QueryInvites(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_HardMuteMember(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_JoinRTCRoom(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Lobby_LeaveRTCRoom(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Lobby_UpdateLobbyModification(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=_fake; return EOS_Success; }
 int  EOS_Lobby_CreateLobbySearch(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=_fake; return EOS_Success; }
 int  EOS_Lobby_GetInviteCount(void *h, const void *o)          { (void)h;(void)o; return 0; }
-int  EOS_Lobby_GetInviteIdByIndex(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_NoConnection; }
-int  EOS_Lobby_CopyLobbyDetailsHandle(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
-int  EOS_Lobby_CopyLobbyDetailsHandleByInviteId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
-int  EOS_Lobby_CopyLobbyDetailsHandleByUiEventId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
-int  EOS_Lobby_GetConnectString(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_NoConnection; }
-int  EOS_Lobby_ParseConnectString(void *h, const void *o)      { (void)h;(void)o; return EOS_NoConnection; }
-int  EOS_Lobby_GetRTCRoomName(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_NoConnection; }
-int  EOS_Lobby_IsRTCRoomConnected(void *h, const void *o, int *c){ (void)h;(void)o; if(c)*c=0; return EOS_NoConnection; }
+int  EOS_Lobby_GetInviteIdByIndex(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_Success; }
+int  EOS_Lobby_CopyLobbyDetailsHandle(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
+int  EOS_Lobby_CopyLobbyDetailsHandleByInviteId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
+int  EOS_Lobby_CopyLobbyDetailsHandleByUiEventId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
+int  EOS_Lobby_GetConnectString(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_Success; }
+int  EOS_Lobby_ParseConnectString(void *h, const void *o)      { (void)h;(void)o; return EOS_Success; }
+int  EOS_Lobby_GetRTCRoomName(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_Success; }
+int  EOS_Lobby_IsRTCRoomConnected(void *h, const void *o, int *c){ (void)h;(void)o; if(c)*c=0; return EOS_Success; }
 uint64_t EOS_Lobby_AddNotifyLobbyUpdateReceived(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o;(void)cd;(void)cb; return 1; }
 uint64_t EOS_Lobby_AddNotifyLobbyMemberUpdateReceived(void *h, const void *o, void *cd, eos_cb cb)
@@ -392,21 +404,21 @@ void EOS_LobbyDetails_Info_Release(void *i)                    { (void)i; }
 void EOS_LobbyDetails_MemberInfo_Release(void *i)              { (void)i; }
 void EOS_Lobby_Attribute_Release(void *a)                      { (void)a; }
 void *EOS_LobbyDetails_GetLobbyOwner(void *h, const void *o)   { (void)h;(void)o; return NULL; }
-int  EOS_LobbyDetails_CopyInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+int  EOS_LobbyDetails_CopyInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 int  EOS_LobbyDetails_GetAttributeCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_LobbyDetails_CopyAttributeByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
-int  EOS_LobbyDetails_CopyAttributeByKey(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
+int  EOS_LobbyDetails_CopyAttributeByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
+int  EOS_LobbyDetails_CopyAttributeByKey(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
 int  EOS_LobbyDetails_GetMemberCount(void *h, const void *o)   { (void)h;(void)o; return 0; }
 void *EOS_LobbyDetails_GetMemberByIndex(void *h, const void *o){ (void)h;(void)o; return NULL; }
 int  EOS_LobbyDetails_GetMemberAttributeCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_LobbyDetails_CopyMemberAttributeByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
-int  EOS_LobbyDetails_CopyMemberAttributeByKey(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
-int  EOS_LobbyDetails_CopyMemberInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+int  EOS_LobbyDetails_CopyMemberAttributeByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
+int  EOS_LobbyDetails_CopyMemberAttributeByKey(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
+int  EOS_LobbyDetails_CopyMemberInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 void EOS_LobbySearch_Release(void *h)                          { (void)h; }
 void EOS_LobbySearch_Find(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_LobbySearch_GetSearchResultCount(void *h)             { (void)h; return 0; }
-int  EOS_LobbySearch_CopySearchResultByIndex(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
+int  EOS_LobbySearch_CopySearchResultByIndex(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
 int  EOS_LobbySearch_SetLobbyId(void *h, const void *o)        { (void)h;(void)o; return EOS_Success; }
 int  EOS_LobbySearch_SetTargetUserId(void *h, const void *o)   { (void)h;(void)o; return EOS_Success; }
 int  EOS_LobbySearch_SetParameter(void *h, const void *o)      { (void)h;(void)o; return EOS_Success; }
@@ -416,15 +428,15 @@ int  EOS_LobbySearch_SetMaxResults(void *h, const void *o)     { (void)h;(void)o
 /* -------------------------------------------------------------------------
  * P2P
  * -------------------------------------------------------------------------*/
-int  EOS_P2P_SendPacket(void *h, const void *o)                { (void)h;(void)o; return EOS_NoConnection; }
-int  EOS_P2P_GetNextReceivedPacketSize(void *h, const void *o, uint32_t *s){ (void)h;(void)o; if(s)*s=0; return EOS_NoConnection; }
-int  EOS_P2P_ReceivePacket(void *h, const void *o, void *b, uint32_t *s, void *c, void *r){ (void)h;(void)o;(void)b;(void)s;(void)c;(void)r; return EOS_NoConnection; }
-int  EOS_P2P_AcceptConnection(void *h, const void *o)          { (void)h;(void)o; return EOS_NoConnection; }
+int  EOS_P2P_SendPacket(void *h, const void *o)                { (void)h;(void)o; return EOS_Success; }
+int  EOS_P2P_GetNextReceivedPacketSize(void *h, const void *o, uint32_t *s){ (void)h;(void)o; if(s)*s=0; return EOS_Success; }
+int  EOS_P2P_ReceivePacket(void *h, const void *o, void *b, uint32_t *s, void *c, void *r){ (void)h;(void)o;(void)b;(void)s;(void)c;(void)r; return EOS_Success; }
+int  EOS_P2P_AcceptConnection(void *h, const void *o)          { (void)h;(void)o; return EOS_Success; }
 int  EOS_P2P_CloseConnection(void *h, const void *o)           { (void)h;(void)o; return EOS_Success; }
 int  EOS_P2P_CloseConnections(void *h, const void *o)          { (void)h;(void)o; return EOS_Success; }
 void EOS_P2P_QueryNATType(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
-int  EOS_P2P_GetNATType(void *h, const void *o, void *t)       { (void)h;(void)o;(void)t; return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
+int  EOS_P2P_GetNATType(void *h, const void *o, void *t)       { (void)h;(void)o;(void)t; return EOS_Success; }
 int  EOS_P2P_SetRelayControl(void *h, const void *o)           { (void)h;(void)o; return EOS_Success; }
 int  EOS_P2P_GetRelayControl(void *h, const void *o, void *c)  { (void)h;(void)o;(void)c; return EOS_Success; }
 int  EOS_P2P_SetPortRange(void *h, const void *o)              { (void)h;(void)o; return EOS_Success; }
@@ -452,22 +464,22 @@ void EOS_P2P_RemoveNotifyIncomingPacketQueueFull(void *h, uint64_t id)    { (voi
  * Achievements
  * -------------------------------------------------------------------------*/
 void EOS_Achievements_QueryDefinitions(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Achievements_QueryPlayerAchievements(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Achievements_UnlockAchievements(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Achievements_GetAchievementDefinitionCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_Achievements_CopyAchievementDefinitionByIndex(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
-int  EOS_Achievements_CopyAchievementDefinitionByAchievementId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
-int  EOS_Achievements_CopyAchievementDefinitionV2ByIndex(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
-int  EOS_Achievements_CopyAchievementDefinitionV2ByAchievementId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
+int  EOS_Achievements_CopyAchievementDefinitionByIndex(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
+int  EOS_Achievements_CopyAchievementDefinitionByAchievementId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
+int  EOS_Achievements_CopyAchievementDefinitionV2ByIndex(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
+int  EOS_Achievements_CopyAchievementDefinitionV2ByAchievementId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
 int  EOS_Achievements_GetPlayerAchievementCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_Achievements_CopyPlayerAchievementByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
-int  EOS_Achievements_CopyPlayerAchievementByAchievementId(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
+int  EOS_Achievements_CopyPlayerAchievementByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
+int  EOS_Achievements_CopyPlayerAchievementByAchievementId(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
 int  EOS_Achievements_GetUnlockedAchievementCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_Achievements_CopyUnlockedAchievementByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
-int  EOS_Achievements_CopyUnlockedAchievementByAchievementId(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_NoConnection; }
+int  EOS_Achievements_CopyUnlockedAchievementByIndex(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
+int  EOS_Achievements_CopyUnlockedAchievementByAchievementId(void *h, const void *o, void **a){ (void)h;(void)o; if(a)*a=NULL; return EOS_Success; }
 void EOS_Achievements_Definition_Release(void *d)              { (void)d; }
 void EOS_Achievements_DefinitionV2_Release(void *d)            { (void)d; }
 void EOS_Achievements_PlayerAchievement_Release(void *a)       { (void)a; }
@@ -482,28 +494,28 @@ void EOS_Achievements_RemoveNotifyAchievementsUnlocked(void *h, uint64_t id) { (
  * Stats / Leaderboards
  * -------------------------------------------------------------------------*/
 void EOS_Stats_IngestStat(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Stats_QueryStats(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Stats_GetStatsCount(void *h, const void *o)           { (void)h;(void)o; return 0; }
-int  EOS_Stats_CopyStatByIndex(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
-int  EOS_Stats_CopyStatByName(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
+int  EOS_Stats_CopyStatByIndex(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
+int  EOS_Stats_CopyStatByName(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
 void EOS_Stats_Stat_Release(void *s)                           { (void)s; }
 void EOS_Leaderboards_QueryLeaderboardDefinitions(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Leaderboards_QueryLeaderboardRanks(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Leaderboards_QueryLeaderboardUserScores(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Leaderboards_GetLeaderboardDefinitionCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_Leaderboards_CopyLeaderboardDefinitionByIndex(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
-int  EOS_Leaderboards_CopyLeaderboardDefinitionByLeaderboardId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_NoConnection; }
+int  EOS_Leaderboards_CopyLeaderboardDefinitionByIndex(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
+int  EOS_Leaderboards_CopyLeaderboardDefinitionByLeaderboardId(void *h, const void *o, void **d){ (void)h;(void)o; if(d)*d=NULL; return EOS_Success; }
 int  EOS_Leaderboards_GetLeaderboardRecordCount(void *h)       { (void)h; return 0; }
-int  EOS_Leaderboards_CopyLeaderboardRecordByIndex(void *h, const void *o, void **r){ (void)h;(void)o; if(r)*r=NULL; return EOS_NoConnection; }
-int  EOS_Leaderboards_CopyLeaderboardRecordByUserId(void *h, const void *o, void **r){ (void)h;(void)o; if(r)*r=NULL; return EOS_NoConnection; }
+int  EOS_Leaderboards_CopyLeaderboardRecordByIndex(void *h, const void *o, void **r){ (void)h;(void)o; if(r)*r=NULL; return EOS_Success; }
+int  EOS_Leaderboards_CopyLeaderboardRecordByUserId(void *h, const void *o, void **r){ (void)h;(void)o; if(r)*r=NULL; return EOS_Success; }
 int  EOS_Leaderboards_GetLeaderboardUserScoreCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_Leaderboards_CopyLeaderboardUserScoreByIndex(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
-int  EOS_Leaderboards_CopyLeaderboardUserScoreByUserId(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
+int  EOS_Leaderboards_CopyLeaderboardUserScoreByIndex(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
+int  EOS_Leaderboards_CopyLeaderboardUserScoreByUserId(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
 void EOS_Leaderboards_Definition_Release(void *d)              { (void)d; }
 void EOS_Leaderboards_LeaderboardDefinition_Release(void *d)   { (void)d; }
 void EOS_Leaderboards_LeaderboardRecord_Release(void *r)       { (void)r; }
@@ -513,30 +525,30 @@ void EOS_Leaderboards_LeaderboardUserScore_Release(void *s)    { (void)s; }
  * UserInfo / Friends / Presence
  * -------------------------------------------------------------------------*/
 void EOS_UserInfo_QueryUserInfo(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_UserInfo_QueryUserInfoByDisplayName(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_UserInfo_QueryUserInfoByExternalAccount(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
-int  EOS_UserInfo_CopyUserInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
-int  EOS_UserInfo_CopyBestDisplayName(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
-int  EOS_UserInfo_CopyBestDisplayNameWithPlatform(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
+int  EOS_UserInfo_CopyUserInfo(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
+int  EOS_UserInfo_CopyBestDisplayName(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
+int  EOS_UserInfo_CopyBestDisplayNameWithPlatform(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 int  EOS_UserInfo_GetExternalUserInfoCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_UserInfo_CopyExternalUserInfoByIndex(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_NoConnection; }
-int  EOS_UserInfo_CopyExternalUserInfoByAccountType(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_NoConnection; }
-int  EOS_UserInfo_CopyExternalUserInfoByAccountId(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_NoConnection; }
+int  EOS_UserInfo_CopyExternalUserInfoByIndex(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_Success; }
+int  EOS_UserInfo_CopyExternalUserInfoByAccountType(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_Success; }
+int  EOS_UserInfo_CopyExternalUserInfoByAccountId(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_Success; }
 int  EOS_UserInfo_GetLocalPlatformType(void *h)                { (void)h; return 0; }
 void EOS_UserInfo_Release(void *i)                             { (void)i; }
 void EOS_UserInfo_ExternalUserInfo_Release(void *e)            { (void)e; }
 void EOS_UserInfo_BestDisplayName_Release(void *n)             { (void)n; }
 void EOS_Friends_QueryFriends(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Friends_SendInvite(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Friends_AcceptInvite(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Friends_RejectInvite(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Friends_GetFriendsCount(void *h, const void *o)       { (void)h;(void)o; return 0; }
 void *EOS_Friends_GetFriendAtIndex(void *h, const void *o)     { (void)h;(void)o; return NULL; }
 int  EOS_Friends_GetStatus(void *h, const void *o)             { (void)h;(void)o; return 0; }
@@ -549,12 +561,12 @@ uint64_t EOS_Friends_AddNotifyBlockedUsersUpdate(void *h, const void *o, void *c
 void EOS_Friends_RemoveNotifyFriendsUpdate(void *h, uint64_t id)      { (void)h;(void)id; }
 void EOS_Friends_RemoveNotifyBlockedUsersUpdate(void *h, uint64_t id) { (void)h;(void)id; }
 void EOS_Presence_QueryPresence(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Presence_SetPresence(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Presence_HasPresence(void *h, const void *o)          { (void)h;(void)o; return 0; }
-int  EOS_Presence_CopyPresence(void *h, const void *o, void **p){ (void)h;(void)o; if(p)*p=NULL; return EOS_NoConnection; }
-int  EOS_Presence_GetJoinInfo(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_NoConnection; }
+int  EOS_Presence_CopyPresence(void *h, const void *o, void **p){ (void)h;(void)o; if(p)*p=NULL; return EOS_Success; }
+int  EOS_Presence_GetJoinInfo(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_Success; }
 int  EOS_Presence_CreatePresenceModification(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=_fake; return EOS_Success; }
 void EOS_Presence_Info_Release(void *i)                        { (void)i; }
 uint64_t EOS_Presence_AddNotifyOnPresenceChanged(void *h, const void *o, void *cd, eos_cb cb)
@@ -576,20 +588,20 @@ int  EOS_PresenceModification_SetJoinInfo(void *m, const void *o){ (void)m;(void
 void EOS_Metrics_BeginPlayerSession(void *h, const void *o) { (void)h;(void)o; }
 void EOS_Metrics_EndPlayerSession(void *h, const void *o)   { (void)h;(void)o; }
 void EOS_Reports_SendPlayerBehaviorReport(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sanctions_QueryActivePlayerSanctions(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Sanctions_CreatePlayerSanctionAppeal(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Sanctions_GetPlayerSanctionCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_Sanctions_CopyPlayerSanctionByIndex(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_NoConnection; }
+int  EOS_Sanctions_CopyPlayerSanctionByIndex(void *h, const void *o, void **s){ (void)h;(void)o; if(s)*s=NULL; return EOS_Success; }
 void EOS_Sanctions_PlayerSanction_Release(void *s)             { (void)s; }
 
 /* -------------------------------------------------------------------------
  * AntiCheat (EAC disabled, but symbols still need to exist)
  * -------------------------------------------------------------------------*/
 void EOS_AntiCheatServer_BeginSession(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_AntiCheatServer_EndSession(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_AntiCheatServer_RegisterClient(void *h, const void *o){ (void)h;(void)o; return EOS_Success; }
@@ -622,7 +634,7 @@ void EOS_AntiCheatServer_RemoveNotifyClientActionRequired(void *h, uint64_t id) 
 void EOS_AntiCheatServer_RemoveNotifyClientAuthStatusChanged(void *h, uint64_t id) { (void)h;(void)id; }
 void EOS_AntiCheatServer_RemoveNotifyMessageToClient(void *h, uint64_t id)         { (void)h;(void)id; }
 void EOS_AntiCheatClient_BeginSession(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_AntiCheatClient_EndSession(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_AntiCheatClient_AddExternalIntegrityCatalog(void *h, const void *o){ (void)h;(void)o; return EOS_Success; }
@@ -657,15 +669,15 @@ void EOS_AntiCheatClient_RemoveNotifyClientIntegrityViolated(void *h, uint64_t i
  * UI
  * -------------------------------------------------------------------------*/
 int  EOS_UI_ShowFriends(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); return EOS_Success; }
 int  EOS_UI_HideFriends(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); return EOS_Success; }
 int  EOS_UI_ShowBlockPlayer(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); return EOS_Success; }
 int  EOS_UI_ShowReportPlayer(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); return EOS_Success; }
 int  EOS_UI_ShowNativeProfile(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); return EOS_Success; }
 int  EOS_UI_GetFriendsVisible(void *h, const void *o)          { (void)h;(void)o; return 0; }
 int  EOS_UI_GetFriendsExclusiveInput(void *h, const void *o)   { (void)h;(void)o; return 0; }
 int  EOS_UI_GetToggleFriendsKey(void *h, const void *o, void *k){ (void)h;(void)o;(void)k; return EOS_Success; }
@@ -692,131 +704,131 @@ void EOS_UI_RemoveNotifyMemoryMonitor(void *h, uint64_t id)          { (void)h;(
  * Ecom / Storage / Mods / KWS / Progression / CustomInvites / IntegratedPlatform
  * -------------------------------------------------------------------------*/
 void EOS_Ecom_QueryOwnership(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Ecom_QueryOwnershipBySandboxIds(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Ecom_QueryOwnershipToken(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Ecom_QueryEntitlements(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Ecom_QueryEntitlementToken(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Ecom_QueryOffers(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Ecom_Checkout(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Ecom_RedeemEntitlements(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_Ecom_GetEntitlementsCount(void *h, const void *o)        { (void)h;(void)o; return 0; }
 int  EOS_Ecom_GetEntitlementsByNameCount(void *h, const void *o)  { (void)h;(void)o; return 0; }
-int  EOS_Ecom_CopyEntitlementByIndex(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_NoConnection; }
-int  EOS_Ecom_CopyEntitlementByNameAndIndex(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_NoConnection; }
-int  EOS_Ecom_CopyEntitlementById(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_NoConnection; }
+int  EOS_Ecom_CopyEntitlementByIndex(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_Success; }
+int  EOS_Ecom_CopyEntitlementByNameAndIndex(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_Success; }
+int  EOS_Ecom_CopyEntitlementById(void *h, const void *o, void **e){ (void)h;(void)o; if(e)*e=NULL; return EOS_Success; }
 int  EOS_Ecom_GetOfferCount(void *h, const void *o)               { (void)h;(void)o; return 0; }
-int  EOS_Ecom_CopyOfferByIndex(void *h, const void *o, void **r)  { (void)h;(void)o; if(r)*r=NULL; return EOS_NoConnection; }
-int  EOS_Ecom_CopyOfferById(void *h, const void *o, void **r)     { (void)h;(void)o; if(r)*r=NULL; return EOS_NoConnection; }
+int  EOS_Ecom_CopyOfferByIndex(void *h, const void *o, void **r)  { (void)h;(void)o; if(r)*r=NULL; return EOS_Success; }
+int  EOS_Ecom_CopyOfferById(void *h, const void *o, void **r)     { (void)h;(void)o; if(r)*r=NULL; return EOS_Success; }
 int  EOS_Ecom_GetOfferItemCount(void *h, const void *o)           { (void)h;(void)o; return 0; }
-int  EOS_Ecom_CopyOfferItemByIndex(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
-int  EOS_Ecom_CopyItemById(void *h, const void *o, void **i)      { (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+int  EOS_Ecom_CopyOfferItemByIndex(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
+int  EOS_Ecom_CopyItemById(void *h, const void *o, void **i)      { (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 int  EOS_Ecom_GetItemImageInfoCount(void *h, const void *o)       { (void)h;(void)o; return 0; }
-int  EOS_Ecom_CopyItemImageInfoByIndex(void *h, const void *o, void **k){ (void)h;(void)o; if(k)*k=NULL; return EOS_NoConnection; }
+int  EOS_Ecom_CopyItemImageInfoByIndex(void *h, const void *o, void **k){ (void)h;(void)o; if(k)*k=NULL; return EOS_Success; }
 int  EOS_Ecom_GetItemReleaseCount(void *h, const void *o)         { (void)h;(void)o; return 0; }
-int  EOS_Ecom_CopyItemReleaseByIndex(void *h, const void *o, void **r){ (void)h;(void)o; if(r)*r=NULL; return EOS_NoConnection; }
+int  EOS_Ecom_CopyItemReleaseByIndex(void *h, const void *o, void **r){ (void)h;(void)o; if(r)*r=NULL; return EOS_Success; }
 int  EOS_Ecom_GetOfferImageInfoCount(void *h, const void *o)      { (void)h;(void)o; return 0; }
-int  EOS_Ecom_CopyOfferImageInfoByIndex(void *h, const void *o, void **k){ (void)h;(void)o; if(k)*k=NULL; return EOS_NoConnection; }
+int  EOS_Ecom_CopyOfferImageInfoByIndex(void *h, const void *o, void **k){ (void)h;(void)o; if(k)*k=NULL; return EOS_Success; }
 int  EOS_Ecom_GetTransactionCount(void *h, const void *o)         { (void)h;(void)o; return 0; }
-int  EOS_Ecom_CopyTransactionByIndex(void *h, const void *o, void **t){ (void)h;(void)o; if(t)*t=NULL; return EOS_NoConnection; }
-int  EOS_Ecom_CopyTransactionById(void *h, const void *o, void **t){ (void)h;(void)o; if(t)*t=NULL; return EOS_NoConnection; }
+int  EOS_Ecom_CopyTransactionByIndex(void *h, const void *o, void **t){ (void)h;(void)o; if(t)*t=NULL; return EOS_Success; }
+int  EOS_Ecom_CopyTransactionById(void *h, const void *o, void **t){ (void)h;(void)o; if(t)*t=NULL; return EOS_Success; }
 int  EOS_Ecom_GetLastRedeemedEntitlementsCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_Ecom_CopyLastRedeemedEntitlementByIndex(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_NoConnection; }
+int  EOS_Ecom_CopyLastRedeemedEntitlementByIndex(void *h, const void *o, void *b, uint32_t *s){ (void)h;(void)o;(void)b;(void)s; return EOS_Success; }
 void EOS_Ecom_Entitlement_Release(void *e)                         { (void)e; }
 void EOS_Ecom_CatalogItem_Release(void *i)                         { (void)i; }
 void EOS_Ecom_CatalogOffer_Release(void *o)                        { (void)o; }
 void EOS_Ecom_CatalogRelease_Release(void *r)                      { (void)r; }
 void EOS_Ecom_KeyImageInfo_Release(void *k)                        { (void)k; }
-int  EOS_Ecom_Transaction_GetTransactionId(void *t, void *b, uint32_t *s){ (void)t;(void)b;(void)s; return EOS_NoConnection; }
+int  EOS_Ecom_Transaction_GetTransactionId(void *t, void *b, uint32_t *s){ (void)t;(void)b;(void)s; return EOS_Success; }
 int  EOS_Ecom_Transaction_GetEntitlementsCount(void *t, const void *o){ (void)t;(void)o; return 0; }
-int  EOS_Ecom_Transaction_CopyEntitlementByIndex(void *t, const void *o, void **e){ (void)t;(void)o; if(e)*e=NULL; return EOS_NoConnection; }
+int  EOS_Ecom_Transaction_CopyEntitlementByIndex(void *t, const void *o, void **e){ (void)t;(void)o; if(e)*e=NULL; return EOS_Success; }
 void EOS_Ecom_Transaction_Release(void *t)                         { (void)t; }
 void EOS_PlayerDataStorage_QueryFile(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_PlayerDataStorage_QueryFileList(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_PlayerDataStorage_ReadFile(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_PlayerDataStorage_WriteFile(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_PlayerDataStorage_DeleteFile(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_PlayerDataStorage_DeleteCache(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_PlayerDataStorage_DuplicateFile(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_PlayerDataStorage_GetFileMetadataCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_PlayerDataStorage_CopyFileMetadataAtIndex(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=NULL; return EOS_NoConnection; }
-int  EOS_PlayerDataStorage_CopyFileMetadataByFilename(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=NULL; return EOS_NoConnection; }
+int  EOS_PlayerDataStorage_CopyFileMetadataAtIndex(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=NULL; return EOS_Success; }
+int  EOS_PlayerDataStorage_CopyFileMetadataByFilename(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=NULL; return EOS_Success; }
 void EOS_PlayerDataStorage_FileMetadata_Release(void *m)           { (void)m; }
 void EOS_PlayerDataStorageFileTransferRequest_Release(void *r)     { (void)r; }
 int  EOS_PlayerDataStorageFileTransferRequest_GetFileRequestState(void *r){ (void)r; return 0; }
-int  EOS_PlayerDataStorageFileTransferRequest_GetFilename(void *r, void *b, uint32_t *s){ (void)r;(void)b;(void)s; return EOS_NoConnection; }
+int  EOS_PlayerDataStorageFileTransferRequest_GetFilename(void *r, void *b, uint32_t *s){ (void)r;(void)b;(void)s; return EOS_Success; }
 int  EOS_PlayerDataStorageFileTransferRequest_CancelRequest(void *r){ (void)r; return EOS_Success; }
 void EOS_TitleStorage_QueryFile(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_TitleStorage_QueryFileList(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_TitleStorage_ReadFile(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_TitleStorage_DeleteCache(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_TitleStorage_GetFileMetadataCount(void *h, const void *o){ (void)h;(void)o; return 0; }
-int  EOS_TitleStorage_CopyFileMetadataAtIndex(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=NULL; return EOS_NoConnection; }
-int  EOS_TitleStorage_CopyFileMetadataByFilename(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=NULL; return EOS_NoConnection; }
+int  EOS_TitleStorage_CopyFileMetadataAtIndex(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=NULL; return EOS_Success; }
+int  EOS_TitleStorage_CopyFileMetadataByFilename(void *h, const void *o, void **m){ (void)h;(void)o; if(m)*m=NULL; return EOS_Success; }
 void EOS_TitleStorage_FileMetadata_Release(void *m)                { (void)m; }
 void EOS_TitleStorageFileTransferRequest_Release(void *r)          { (void)r; }
 int  EOS_TitleStorageFileTransferRequest_GetFileRequestState(void *r){ (void)r; return 0; }
-int  EOS_TitleStorageFileTransferRequest_GetFilename(void *r, void *b, uint32_t *s){ (void)r;(void)b;(void)s; return EOS_NoConnection; }
+int  EOS_TitleStorageFileTransferRequest_GetFilename(void *r, void *b, uint32_t *s){ (void)r;(void)b;(void)s; return EOS_Success; }
 int  EOS_TitleStorageFileTransferRequest_CancelRequest(void *r)    { (void)r; return EOS_Success; }
 void EOS_Mods_EnumerateMods(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Mods_InstallMod(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Mods_UninstallMod(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Mods_UpdateMod(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
-int  EOS_Mods_CopyModInfo(void *h, const void *o, void **i)        { (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
+int  EOS_Mods_CopyModInfo(void *h, const void *o, void **i)        { (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 void EOS_Mods_ModInfo_Release(void *i)                             { (void)i; }
 void EOS_KWS_QueryAgeGate(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_KWS_CreateUser(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_KWS_QueryPermissions(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_KWS_RequestPermissions(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_KWS_UpdateParentEmail(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_KWS_GetPermissionsCount(void *h, const void *o)           { (void)h;(void)o; return 0; }
-int  EOS_KWS_CopyPermissionByIndex(void *h, const void *o, void **p){ (void)h;(void)o; if(p)*p=NULL; return EOS_NoConnection; }
-int  EOS_KWS_GetPermissionByKey(void *h, const void *o, void *v)   { (void)h;(void)o;(void)v; return EOS_NoConnection; }
+int  EOS_KWS_CopyPermissionByIndex(void *h, const void *o, void **p){ (void)h;(void)o; if(p)*p=NULL; return EOS_Success; }
+int  EOS_KWS_GetPermissionByKey(void *h, const void *o, void *v)   { (void)h;(void)o;(void)v; return EOS_Success; }
 void EOS_KWS_PermissionStatus_Release(void *p)                     { (void)p; }
 uint64_t EOS_KWS_AddNotifyPermissionsUpdateReceived(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o;(void)cd;(void)cb; return 1; }
 void EOS_KWS_RemoveNotifyPermissionsUpdateReceived(void *h, uint64_t id) { (void)h;(void)id; }
 void EOS_ProgressionSnapshot_BeginSnapshot(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_ProgressionSnapshot_AddProgression(void *h, const void *o){ (void)h;(void)o; return EOS_Success; }
 void EOS_ProgressionSnapshot_SubmitSnapshot(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_ProgressionSnapshot_DeleteSnapshot(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_ProgressionSnapshot_EndSnapshot(void *h, const void *o)   { (void)h;(void)o; return EOS_Success; }
 void EOS_CustomInvites_SendCustomInvite(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_CustomInvites_SendRequestToJoin(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_CustomInvites_AcceptRequestToJoin(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_CustomInvites_RejectRequestToJoin(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_CustomInvites_FinalizeInvite(void *h, const void *o, void *cd, eos_cb cb)
@@ -862,11 +874,11 @@ void EOS_IntegratedPlatform_RemoveNotifyUserLoginStatusChanged(void *h, uint64_t
  * RTC / RTCAudio / RTCData / RTCAdmin
  * -------------------------------------------------------------------------*/
 void EOS_RTC_JoinRoom(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTC_LeaveRoom(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTC_BlockParticipant(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_RTC_SetRoomSetting(void *h, const void *o)                { (void)h;(void)o; return EOS_Success; }
 int  EOS_RTC_SetSetting(void *h, const void *o)                    { (void)h;(void)o; return EOS_Success; }
 uint64_t EOS_RTC_AddNotifyDisconnected(void *h, const void *o, void *cd, eos_cb cb)
@@ -881,27 +893,27 @@ void EOS_RTC_RemoveNotifyRoomStatisticsUpdated(void *h, uint64_t id)    { (void)
 
 /* RTCAudio */
 void EOS_RTCAudio_QueryInputDevicesInformation(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCAudio_QueryOutputDevicesInformation(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCAudio_UpdateSending(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCAudio_UpdateReceiving(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCAudio_UpdateSendingVolume(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCAudio_UpdateReceivingVolume(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCAudio_UpdateParticipantVolume(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 int  EOS_RTCAudio_GetAudioInputDevicesCount(void *h, const void *o)  { (void)h;(void)o; return 0; }
 int  EOS_RTCAudio_GetAudioOutputDevicesCount(void *h, const void *o) { (void)h;(void)o; return 0; }
 int  EOS_RTCAudio_GetInputDevicesCount(void *h)                       { (void)h; return 0; }
 int  EOS_RTCAudio_GetOutputDevicesCount(void *h)                      { (void)h; return 0; }
 void *EOS_RTCAudio_GetAudioInputDeviceByIndex(void *h, const void *o) { (void)h;(void)o; return NULL; }
 void *EOS_RTCAudio_GetAudioOutputDeviceByIndex(void *h, const void *o){ (void)h;(void)o; return NULL; }
-int  EOS_RTCAudio_CopyInputDeviceInformationByIndex(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
-int  EOS_RTCAudio_CopyOutputDeviceInformationByIndex(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_NoConnection; }
+int  EOS_RTCAudio_CopyInputDeviceInformationByIndex(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
+int  EOS_RTCAudio_CopyOutputDeviceInformationByIndex(void *h, const void *o, void **i){ (void)h;(void)o; if(i)*i=NULL; return EOS_Success; }
 void EOS_RTCAudio_InputDeviceInformation_Release(void *i)  { (void)i; }
 void EOS_RTCAudio_OutputDeviceInformation_Release(void *i) { (void)i; }
 int  EOS_RTCAudio_SetAudioInputSettings(void *h, const void *o)       { (void)h;(void)o; return EOS_Success; }
@@ -934,10 +946,10 @@ void EOS_RTCAudio_RemoveNotifyParticipantUpdated(void *h, uint64_t id)   { (void
 
 /* RTCData */
 void EOS_RTCData_UpdateSending(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCData_UpdateReceiving(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
-int  EOS_RTCData_SendData(void *h, const void *o)                     { (void)h;(void)o; return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
+int  EOS_RTCData_SendData(void *h, const void *o)                     { (void)h;(void)o; return EOS_Success; }
 uint64_t EOS_RTCData_AddNotifyDataReceived(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o;(void)cd;(void)cb; return 1; }
 uint64_t EOS_RTCData_AddNotifyParticipantUpdated(void *h, const void *o, void *cd, eos_cb cb)
@@ -947,55 +959,55 @@ void EOS_RTCData_RemoveNotifyParticipantUpdated(void *h, uint64_t id) { (void)h;
 
 /* RTCAdmin */
 void EOS_RTCAdmin_QueryJoinRoomToken(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCAdmin_Kick(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_RTCAdmin_SetParticipantHardMute(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
-int  EOS_RTCAdmin_CopyUserTokenByIndex(void *h, const void *o, void **t){ (void)h;(void)o; if(t)*t=NULL; return EOS_NoConnection; }
-int  EOS_RTCAdmin_CopyUserTokenByUserId(void *h, const void *o, void **t){ (void)h;(void)o; if(t)*t=NULL; return EOS_NoConnection; }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
+int  EOS_RTCAdmin_CopyUserTokenByIndex(void *h, const void *o, void **t){ (void)h;(void)o; if(t)*t=NULL; return EOS_Success; }
+int  EOS_RTCAdmin_CopyUserTokenByUserId(void *h, const void *o, void **t){ (void)h;(void)o; if(t)*t=NULL; return EOS_Success; }
 void EOS_RTCAdmin_UserToken_Release(void *t)                           { (void)t; }
 
 /* Audio (non-RTC) */
-int  EOS_Audio_CreateNewInputStream(void *h, const void *o)            { (void)h;(void)o; return EOS_NoConnection; }
-int  EOS_Audio_CreateNewOutputStream(void *h, const void *o)           { (void)h;(void)o; return EOS_NoConnection; }
+int  EOS_Audio_CreateNewInputStream(void *h, const void *o)            { (void)h;(void)o; return EOS_Success; }
+int  EOS_Audio_CreateNewOutputStream(void *h, const void *o)           { (void)h;(void)o; return EOS_Success; }
 int  EOS_Audio_DestroyInputStream(void *h, const void *o)              { (void)h;(void)o; return EOS_Success; }
 int  EOS_Audio_DestroyOutputStream(void *h, const void *o)             { (void)h;(void)o; return EOS_Success; }
-int  EOS_Audio_StartInputStream(void *h, const void *o)                { (void)h;(void)o; return EOS_NoConnection; }
+int  EOS_Audio_StartInputStream(void *h, const void *o)                { (void)h;(void)o; return EOS_Success; }
 int  EOS_Audio_StopInputStream(void *h, const void *o)                 { (void)h;(void)o; return EOS_Success; }
-int  EOS_Audio_StartOutputStream(void *h, const void *o)               { (void)h;(void)o; return EOS_NoConnection; }
+int  EOS_Audio_StartOutputStream(void *h, const void *o)               { (void)h;(void)o; return EOS_Success; }
 int  EOS_Audio_StopOutputStream(void *h, const void *o)                { (void)h;(void)o; return EOS_Success; }
-int  EOS_Audio_GetInputStreamInfo(void *h, const void *o, void *i)     { (void)h;(void)o;(void)i; return EOS_NoConnection; }
-int  EOS_Audio_GetOutputStreamInfo(void *h, const void *o, void *i)    { (void)h;(void)o;(void)i; return EOS_NoConnection; }
-int  EOS_Audio_GetInputDeviceInfo(void *h, const void *o, void *i)     { (void)h;(void)o;(void)i; return EOS_NoConnection; }
-int  EOS_Audio_GetOutputDeviceInfo(void *h, const void *o, void *i)    { (void)h;(void)o;(void)i; return EOS_NoConnection; }
-int  EOS_Audio_IsInputStreamSilent(void *h, const void *o, int *s)     { (void)h;(void)o; if(s)*s=1; return EOS_NoConnection; }
-int  EOS_Audio_IsInputStreamDeviceDisconnected(void *h, const void *o, int *d){ (void)h;(void)o; if(d)*d=1; return EOS_NoConnection; }
+int  EOS_Audio_GetInputStreamInfo(void *h, const void *o, void *i)     { (void)h;(void)o;(void)i; return EOS_Success; }
+int  EOS_Audio_GetOutputStreamInfo(void *h, const void *o, void *i)    { (void)h;(void)o;(void)i; return EOS_Success; }
+int  EOS_Audio_GetInputDeviceInfo(void *h, const void *o, void *i)     { (void)h;(void)o;(void)i; return EOS_Success; }
+int  EOS_Audio_GetOutputDeviceInfo(void *h, const void *o, void *i)    { (void)h;(void)o;(void)i; return EOS_Success; }
+int  EOS_Audio_IsInputStreamSilent(void *h, const void *o, int *s)     { (void)h;(void)o; if(s)*s=1; return EOS_Success; }
+int  EOS_Audio_IsInputStreamDeviceDisconnected(void *h, const void *o, int *d){ (void)h;(void)o; if(d)*d=1; return EOS_Success; }
 int  EOS_Audio_SetFeatureEnabledForInputStream(void *h, const void *o) { (void)h;(void)o; return EOS_Success; }
 int  EOS_Audio_EnableCommunicationsModeOutputDevices(void *h, const void *o){ (void)h;(void)o; return EOS_Success; }
 int  EOS_Audio_RegisterUser(void *h, const void *o)                    { (void)h;(void)o; return EOS_Success; }
 int  EOS_Audio_UnregisterUser(void *h, const void *o)                  { (void)h;(void)o; return EOS_Success; }
 void EOS_Audio_QueryInputDevices(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 void EOS_Audio_QueryOutputDevices(void *h, const void *o, void *cd, eos_cb cb)
-    { (void)h;(void)o; _fire(cb, cd, EOS_NoConnection); }
+    { (void)h;(void)o; _fire(cb, cd, EOS_Success); }
 uint64_t EOS_Audio_SetNotifyDevicesChanged(void *h, const void *o, void *cd, eos_cb cb)
     { (void)h;(void)o;(void)cd;(void)cb; return 1; }
 void EOS_Audio_RemoveNotifyDevicesChanged(void *h, uint64_t id) { (void)h;(void)id; }
 
 /* BroadcastAudio */
-int  EOS_BroadcastAudio_CreateNewInputStream(void *h, const void *o)   { (void)h;(void)o; return EOS_NoConnection; }
-int  EOS_BroadcastAudio_CreateNewOutputStream(void *h, const void *o)  { (void)h;(void)o; return EOS_NoConnection; }
+int  EOS_BroadcastAudio_CreateNewInputStream(void *h, const void *o)   { (void)h;(void)o; return EOS_Success; }
+int  EOS_BroadcastAudio_CreateNewOutputStream(void *h, const void *o)  { (void)h;(void)o; return EOS_Success; }
 int  EOS_BroadcastAudio_DestroyInputStream(void *h, const void *o)     { (void)h;(void)o; return EOS_Success; }
 int  EOS_BroadcastAudio_DestroyOutputStream(void *h, const void *o)    { (void)h;(void)o; return EOS_Success; }
-int  EOS_BroadcastAudio_StartInputStream(void *h, const void *o)       { (void)h;(void)o; return EOS_NoConnection; }
+int  EOS_BroadcastAudio_StartInputStream(void *h, const void *o)       { (void)h;(void)o; return EOS_Success; }
 int  EOS_BroadcastAudio_StopInputStream(void *h, const void *o)        { (void)h;(void)o; return EOS_Success; }
-int  EOS_BroadcastAudio_StartOutputStream(void *h, const void *o)      { (void)h;(void)o; return EOS_NoConnection; }
+int  EOS_BroadcastAudio_StartOutputStream(void *h, const void *o)      { (void)h;(void)o; return EOS_Success; }
 int  EOS_BroadcastAudio_StopOutputStream(void *h, const void *o)       { (void)h;(void)o; return EOS_Success; }
-int  EOS_BroadcastAudio_GetInputStreamInfo(void *h, const void *o, void *i){ (void)h;(void)o;(void)i; return EOS_NoConnection; }
-int  EOS_BroadcastAudio_GetOutputStreamInfo(void *h, const void *o, void *i){ (void)h;(void)o;(void)i; return EOS_NoConnection; }
-int  EOS_BroadcastAudio_GetCurrentMicAmplitude(void *h, const void *o, float *a){ (void)h;(void)o; if(a)*a=0.f; return EOS_NoConnection; }
-int  EOS_BroadcastAudio_GetCurrentGainLevel(void *h, const void *o, float *g){ (void)h;(void)o; if(g)*g=0.f; return EOS_NoConnection; }
+int  EOS_BroadcastAudio_GetInputStreamInfo(void *h, const void *o, void *i){ (void)h;(void)o;(void)i; return EOS_Success; }
+int  EOS_BroadcastAudio_GetOutputStreamInfo(void *h, const void *o, void *i){ (void)h;(void)o;(void)i; return EOS_Success; }
+int  EOS_BroadcastAudio_GetCurrentMicAmplitude(void *h, const void *o, float *a){ (void)h;(void)o; if(a)*a=0.f; return EOS_Success; }
+int  EOS_BroadcastAudio_GetCurrentGainLevel(void *h, const void *o, float *g){ (void)h;(void)o; if(g)*g=0.f; return EOS_Success; }
 int  EOS_BroadcastAudio_SetMicProcessingSettings(void *h, const void *o){ (void)h;(void)o; return EOS_Success; }
 int  EOS_BroadcastAudio_SetEncoderSettings(void *h, const void *o)     { (void)h;(void)o; return EOS_Success; }
-int  EOS_BroadcastAudio_PushPacketToOutputStream(void *h, const void *o){ (void)h;(void)o; return EOS_NoConnection; }
+int  EOS_BroadcastAudio_PushPacketToOutputStream(void *h, const void *o){ (void)h;(void)o; return EOS_Success; }
