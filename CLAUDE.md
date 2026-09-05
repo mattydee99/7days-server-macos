@@ -37,7 +37,7 @@ A Docker setup to run the Linux x86_64 7 Days to Die dedicated server on Apple S
 # Build image and start container in the background
 docker compose up -d --build
 
-# Rebuild from scratch (useful after changing the EOS stub)
+# Rebuild from scratch
 docker compose up -d --build --no-cache
 
 # Force recreate after a SteamCMD update
@@ -68,9 +68,9 @@ docker exec -it 7days box64 --version
 
 ## High-level architecture
 
-### The three problems this setup solves
+### The problems this setup solves
 
-1. **EOS SDK hangs under ARM emulation** — Epic Online Services uses async callbacks with x86_64 threading semantics that deadlock when emulated. The fix is to replace `libEOSSDK-Linux-Shipping.so` with a stub (`eos-stub/eos_stub.c`) that exports all EOS symbols and returns `EOS_NoConnection` immediately.
+1. **EOS SDK used to hang under box64** — the real EOS SDK's async completion callbacks would wedge indefinitely under default box64 dynarec settings. Fixed by setting `BOX64_DYNAREC_STRONGMEM=2`, `BOX64_DYNAREC_BLEEDING_EDGE=0`, `BOX64_DYNAREC_BIGBLOCK=0` (set as `ENV` in `docker/Dockerfile`). With these, the real, unmodified `libEOSSDK-Linux-Shipping.so` initializes and registers a session correctly — no stub, no wrapper needed.
 
 2. **Mono JIT crashes under Rosetta 2 / QEMU** — Running the server with `--platform=linux/amd64` places JIT-compiled Mono code and native libraries more than 2 GB apart, which overflows x86 `CALL rel32` offsets. The fix is to run in an ARM64 container with box64, which manages its own x86_64 address space.
 
@@ -78,10 +78,10 @@ docker exec -it 7days box64 --version
 
 ### Key files and their roles
 
-- `docker/Dockerfile` — two-stage build: compiles the x86_64 EOS stub in an amd64 stage, then installs box64 in an arm64 runtime stage and copies the stub over the real EOS SDK.
+- `docker/Dockerfile` — single-stage `linux/arm64` build: installs box64 from ptitSeb's PPA, sets the `BOX64_DYNAREC_*` tuning env vars, and copies `server/` in with the real EOS SDK untouched.
 - `docker/entrypoint.sh` — renders `serverconfig.xml` via `envsubst`, `cd`s to the game directory, launches the server under box64, and syncs saves to S3 on SIGTERM.
 - `config/serverconfig.xml` — server configuration; environment variables from `.env` are substituted at container startup.
-- `eos-stub/eos_stub.c` + `eos-stub/eos.map` — EOS SDK stub and linker version script.
+- `eos-stub/eos_stub.c` + `eos-stub/eos.map` — **historical artifact**, no longer used by `docker/Dockerfile`. Kept for reference; see "Why the stub/wrapper approaches failed" below.
 - `docker-compose.yml` — defines the `7days` service, `linux/arm64` platform, ports, volume mounts for saves/config/game files, and 5-minute stop grace period.
 
 ### Volume layout
@@ -94,26 +94,41 @@ docker exec -it 7days box64 --version
 
 `serverconfig.xml` controls which networking stacks are active. The valid values for `ServerDisabledNetworkProtocols` are `LiteNetLib` and `SteamNetworking`. Do not add `EOS` there — it is not a valid protocol choice.
 
-## Current status caveat
+## Current status: WORKING
 
-As of the latest experiments, the **server process starts and logs `GameServer.LogOn successful`, but it does not become joinable/"ready"**. The EOS session-registration step still fails even with a native ARM64 EOS SDK loaded via a box64 wrapper. Do not treat "server is running" as "server is accepting players" without checking the logs for `Failed creating session modification` or attempting an actual client connection.
+As of 2026-09-05 (game build 24994542, the "v3.2" era), the server starts,
+registers a real EOS session (`[EOS] Server registered, session: ...`), and a
+real game client has successfully connected by direct IP over LAN. No
+`EOS_NoConnection` or `Failed creating session` errors.
+
+### Why the stub/wrapper approaches failed (do not re-attempt without new evidence)
+
+The original assumption was that a headless dedicated server fundamentally
+couldn't complete EOS session registration under emulation. That was wrong.
+The actual root cause was CA certificate trust, discovered by inspecting the
+embedded cert store in each `.so` with `strings`:
+
+- `api.epicgames.dev` currently serves a certificate issued by **Google Trust
+  Services (CN=WE1)**.
+- The real x86_64 `libEOSSDK-Linux-Shipping.so` has `GTS Root R1`–`R4` baked
+  into its statically-linked CA bundle → validates fine.
+- The **ARM64-native** `libEOSSDK-LinuxArm64-Shipping.so` (the one the old
+  custom box64 wrapper redirected calls to) only has legacy roots (DigiCert,
+  Starfield, GlobalSign, Comodo, Entrust, GoDaddy) — no Google Trust Services
+  root at all. It can **never** validate that certificate, no matter how
+  correctly the wrapper mechanically works.
+- The EOS SDK's CA store is compiled into the `.so`, not read from the
+  container's system `/etc/ssl/certs` — so updating the container's OS-level
+  `ca-certificates` package cannot fix this for the ARM64-native SDK.
+
+This means: always use the real x86_64 EOS SDK (shipped unmodified in
+`server/`), never the `LinuxArm64` variant, and never a stub if you want a
+joinable server.
 
 ## Notes for changes
 
-- The EOS stub is built as a 64-bit shared object from an amd64 compiler stage. Editing `eos-stub/eos_stub.c` requires a full image rebuild to take effect.
 - Any change to `config/serverconfig.xml` takes effect on the next `docker compose up` because the file is mounted read-only live.
 - `./saves` persists across rebuilds because it is a host bind mount.
-- There is no automated test suite in this repo; validation is done by starting the container and reading `docker logs`.
-
-## Next steps to investigate
-
-The server starts but is not joinable. Three candidate paths to try next:
-
-1. **Test a real Steam client connection by direct IP**
-   The server reaches `[Steamworks.NET] GameServer.LogOn successful`, which means Steam networking is up. A Steam client connecting directly to the host IP on port 26900 might work even though EOS session registration fails. This requires running the actual 7 Days to Die game client and joining by IP/password.
-
-2. **Hybrid wrapper + targeted session stubbing**
-   Use the custom box64 native ARM64 EOS SDK wrapper (see `docker/Dockerfile.wrapper`) for most calls, but intercept `EOS_Sessions_CreateSessionModification` / `EOS_Sessions_UpdateSession` and force success with synthetic session data (session name, session ID). This may get the server past the "still initializing" state. Risk: player auth may still need valid Epic IDs.
-
-3. **Investigate why EOS auth/login does not yield a user**
-   The real ARM64 EOS SDK loads and reports `Initialize: Success`, but `QueryFile (PlatformOverrides)` returns `EOS_NoConnection` and session creation fails. Debug why `EOS_Connect_Login` / platform creation do not produce a logged-in `EOS_ProductUserId` in a headless dedicated-server context. This may involve inspecting callback struct layouts in the box64 wrapper, checking how 7D2D passes `EOS_Platform_Options` / `EOS_Connect_Credentials`, or confirming whether the dedicated server expects Epic product/deployment credentials.
+- There is no automated test suite in this repo; validation is done by starting the container, reading `docker logs` for `[EOS] Server registered, session:` (success) vs `EOS_NoConnection` / `Failed creating session` (failure), and ideally attempting a real client connection.
+- A major game version jump (e.g. loading old v2.x saves under a v3.x server) can silently start a fresh world instead of loading the old save — this is a game-side save-format compatibility issue, unrelated to Docker/EOS.
+- If SDK-embedded CA roots go stale again in the future (Epic/Google rotate certs again), re-run the `strings <lib>.so | grep -i "root ca\|certification authority\|GTS Root"` check against both EOS SDK variants before assuming it's a networking or session-architecture problem.

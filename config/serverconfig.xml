@@ -32,7 +32,7 @@
 
   <!-- World -->
   <property name="GameWorld"                       value="Navezgane" />
-  <property name="GameName"                        value="shot3dick" />
+  <property name="GameName"                        value="3.2new" />
   <property name="GameMode"                        value="GameModeSurvival" />
 
   <!-- Difficulty -->

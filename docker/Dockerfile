@@ -1,21 +1,3 @@
-# Build the EOS stub (x86_64)
-FROM --platform=linux/amd64 ubuntu:22.04 AS eos-builder
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        gcc \
-        libc6-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY eos-stub/eos_stub.c /build/eos_stub.c
-COPY eos-stub/eos.map    /build/eos.map
-
-RUN gcc -m64 -shared -fPIC -nostartfiles \
-        -Wl,--version-script=/build/eos.map \
-        -o /build/libEOSSDK-Linux-Shipping.so \
-        /build/eos_stub.c
-
-# ----
-
 FROM --platform=linux/arm64 ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -46,13 +28,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libxi6 \
     && rm -rf /var/lib/apt/lists/*
 
+# Tuning that avoids the historical box64 hang on the real EOS SDK's async
+# callbacks. Without these, EOS_Platform_Tick can wedge indefinitely.
+ENV BOX64_DYNAREC_STRONGMEM=2
+ENV BOX64_DYNAREC_BLEEDING_EDGE=0
+ENV BOX64_DYNAREC_BIGBLOCK=0
+
 RUN useradd -m -s /bin/bash steam
 
+# Real EOS SDK is left in place — it validates api.epicgames.dev's current
+# certificate (issued by Google Trust Services) fine. Do not replace it with
+# a stub: the stub can never register a real session, and the ARM64-native
+# EOS SDK that ships alongside it has a stale embedded CA bundle that's
+# missing the Google Trust Services roots entirely.
 COPY --chown=steam:steam server/ /opt/7days/
-
-# Replace the real EOS SDK with the stub so the server doesn't hang on startup
-COPY --from=eos-builder /build/libEOSSDK-Linux-Shipping.so \
-        /opt/7days/7DaysToDieServer_Data/Plugins/libEOSSDK-Linux-Shipping.so
 
 RUN mkdir -p /home/steam/.local/share/7DaysToDie/Saves \
     && chown -R steam:steam /home/steam/.local
