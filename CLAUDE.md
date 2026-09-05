@@ -66,6 +66,16 @@ docker exec -it 7days bash
 docker exec -it 7days box64 --version
 ```
 
+### Backups
+
+Nightly backups to S3 run automatically at 03:00 UTC (see `docker/backup.sh`). To trigger one on demand or with a different retention count:
+
+```bash
+docker exec 7days backup.sh --retain 5
+```
+
+`BACKUP_RETAIN` in `.env` sets the default retention (how many dated nightly backups are kept before older ones are pruned); changing it only requires `docker compose up -d` to pick up, not a rebuild.
+
 ## High-level architecture
 
 ### The problems this setup solves
@@ -79,7 +89,8 @@ docker exec -it 7days box64 --version
 ### Key files and their roles
 
 - `docker/Dockerfile` — single-stage `linux/arm64` build: installs box64 from ptitSeb's PPA, sets the `BOX64_DYNAREC_*` tuning env vars, and copies `server/` in with the real EOS SDK untouched.
-- `docker/entrypoint.sh` — renders `serverconfig.xml` via `envsubst`, `cd`s to the game directory, launches the server under box64, and syncs saves to S3 on SIGTERM.
+- `docker/entrypoint.sh` — renders `serverconfig.xml` via `envsubst`, `cd`s to the game directory, launches the server under box64, runs a background loop that triggers `backup.sh` nightly at 03:00 UTC, and syncs saves to S3 on SIGTERM.
+- `docker/backup.sh` — syncs `Saves/` to a timestamped `s3://$S3_BACKUP_BUCKET/backups/<UTC timestamp>/` prefix, then prunes older dated prefixes beyond `$BACKUP_RETAIN` (default 7). Runs automatically every night; can also be run manually (`docker exec 7days backup.sh --retain 5`) to back up on demand or change retention for that run. Separate from, and does not replace, the SIGTERM shutdown sync to `s3://$S3_BACKUP_BUCKET/saves/`.
 - `config/serverconfig.xml` — server configuration; environment variables from `.env` are substituted at container startup.
 - `eos-stub/eos_stub.c` + `eos-stub/eos.map` — **historical artifact**, no longer used by `docker/Dockerfile`. Kept for reference; see "Why the stub/wrapper approaches failed" below.
 - `docker-compose.yml` — defines the `7days` service, `linux/arm64` platform, ports, volume mounts for saves/config/game files, and 5-minute stop grace period.

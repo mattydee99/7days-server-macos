@@ -23,6 +23,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-west-2}
+      - BACKUP_RETAIN=${BACKUP_RETAIN:-7}
 
 volumes:
   game_files:

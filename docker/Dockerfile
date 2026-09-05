@@ -47,7 +47,8 @@ RUN mkdir -p /home/steam/.local/share/7DaysToDie/Saves \
     && chown -R steam:steam /home/steam/.local
 
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY docker/backup.sh /usr/local/bin/backup.sh
+RUN chmod +x /entrypoint.sh /usr/local/bin/backup.sh
 
 EXPOSE 26900/tcp 26900/udp 26901/udp 26902/udp
 
