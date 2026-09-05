@@ -125,6 +125,31 @@ This means: always use the real x86_64 EOS SDK (shipped unmodified in
 `server/`), never the `LinuxArm64` variant, and never a stub if you want a
 joinable server.
 
+### Container restarts: check for VM-level OOM before suspecting EOS/box64
+
+On 2026-09-05 the container restarted unexpectedly after ~13 hours of uptime.
+`docker inspect` was misleading — it showed `OOMKilled: false` and
+`ExitCode: 0` at the container level, because the container's own cgroup
+never hit a limit. The actual cause was a **host-VM-wide kernel OOM kill**:
+the game process's RSS had climbed to ~4.5GB over the long session, and
+Docker Desktop's VM (then capped at ~7.75GB total, shared with several
+other unrelated containers) ran out of memory, so the Linux kernel killed
+the largest process — `7DaysToDieServer`.
+
+If the container restarts again with no error/exception in `docker logs`
+(just an abrupt `Killed` line from `entrypoint.sh`), check the VM's kernel
+log first, before assuming an EOS/box64 regression:
+
+```bash
+docker run --rm --privileged --pid=host alpine sh -c 'dmesg | tail -60'
+# look for a line containing "oom-kill" / "Out of memory: Killed process"
+```
+
+**Fix applied:** raised Docker Desktop's VM memory allocation to 16GB
+(Docker Desktop → Settings → Resources → Memory) to give the game server
+headroom alongside other containers sharing the same VM. This is a Docker
+Desktop host setting, not something set in this repo's config.
+
 ## Notes for changes
 
 - Any change to `config/serverconfig.xml` takes effect on the next `docker compose up` because the file is mounted read-only live.
@@ -132,3 +157,4 @@ joinable server.
 - There is no automated test suite in this repo; validation is done by starting the container, reading `docker logs` for `[EOS] Server registered, session:` (success) vs `EOS_NoConnection` / `Failed creating session` (failure), and ideally attempting a real client connection.
 - A major game version jump (e.g. loading old v2.x saves under a v3.x server) can silently start a fresh world instead of loading the old save — this is a game-side save-format compatibility issue, unrelated to Docker/EOS.
 - If SDK-embedded CA roots go stale again in the future (Epic/Google rotate certs again), re-run the `strings <lib>.so | grep -i "root ca\|certification authority\|GTS Root"` check against both EOS SDK variants before assuming it's a networking or session-architecture problem.
+- If the container restarts unexpectedly, check for a VM-level OOM kill (see above) before assuming an EOS/box64 regression.
