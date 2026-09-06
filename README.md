@@ -17,6 +17,15 @@ The 7D2D server binary is Linux x86_64-only. Getting it to run on ARM64, joinabl
 ### Trade-offs
 None currently known — crossplay/EOS session registration, Steam auth, saves, and S3 backup all work. Some harmless log noise from box64 about missing X11/SDL3 symbols used by mouse input, which a headless server doesn't need.
 
+### Prior art
+
+Public attempts at this fall into two camps, neither of which gets a joinable, EOS-registered *Linux* dedicated server running under emulation on Apple Silicon:
+
+- **box64 attempts crash before EOS is even reached.** A [box64 GitHub issue](https://github.com/ptitSeb/box64/issues/102) documents someone trying the 7D2D dedicated server on ARM64 (Raspberry Pi 4) and hitting an unrecoverable `Unimplemented Opcode` segfault during Mono/.NET startup — no EOS registration, no fix posted, issue still open.
+- **The common Mac workaround avoids the problem instead of solving it.** The [Steam Community Mac dedicated-server guide](https://steamcommunity.com/sharedfiles/filedetails/?id=3489942057) runs the *native ARM64 macOS game client* in `-dedicated -batchmode` mode (no emulation needed, since it's native) but explicitly **disables EOS/crossplay** in `platform.cfg` to dodge `EOS_NoConnection` errors, restricting the server to Steam-only connections.
+
+This setup is the only one found (as of 2026-09) that keeps the *real* Linux x86_64 binary, keeps the *real* unmodified EOS SDK, keeps crossplay enabled, and gets a session to register under box64 — via the dynarec tuning and CA-root diagnosis above. This is based on search-engine visibility, not an exhaustive audit; there may be an unindexed forum/Discord thread that got further.
+
 ---
 
 ## First-time setup
