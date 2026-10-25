@@ -23,7 +23,7 @@
   <!-- Admin/Control Panel -->
   <property name="WebDashboardEnabled"             value="false" />
   <property name="WebDashboardPort"                value="8080" />
-  <property name="TelnetEnabled"                   value="false" />
+  <property name="TelnetEnabled"                   value="true" />
   <property name="TelnetPort"                      value="8081" />
   <property name="TelnetPassword"                  value="${TELNET_PASSWORD}" />
   <property name="TelnetFailedLoginLimit"          value="10" />

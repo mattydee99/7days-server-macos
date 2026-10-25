@@ -15,6 +15,7 @@ services:
     volumes:
       - ./config/serverconfig.xml:/config/serverconfig.xml:ro
       - ./saves:/home/steam/.local/share/7DaysToDie/Saves
+      - ./castle:/home/steam/castle
     environment:
       - SERVER_PASSWORD=${SERVER_PASSWORD}
       - TELNET_PASSWORD=${TELNET_PASSWORD}
