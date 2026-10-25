@@ -23,5 +23,5 @@ printf '%s\r\n' "$1" >&3
 sleep "$WAIT"
 printf 'exit\r\n' >&3
 # Drop the login banner: print from the echoed command onwards.
-timeout 5 cat <&3 | tr -d '\r' | sed -n "/Executing command '$1'/,\$p"
+timeout 5 cat <&3 | tr -d '\r' | awk -v c="Executing command '$1'" 'index($0, c) { p = 1 } p'
 exec 3<&-

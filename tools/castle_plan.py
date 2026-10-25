@@ -210,6 +210,47 @@ def stations(out):
     fill(out, 539, 61, 330, 539, 61, 330, "combineStation")
 
 
+def ledges(out):
+    """2x2 steel ledges for shotgun turrets on the inside of the east wall,
+    either side of the gate, 4 above the landing so zombies there can't reach."""
+    out.append("# turret ledges either side of the gate")
+    x0, x1 = INNER[2] - 1, INNER[2]
+    fill(out, x0, 64, GATE_Z[0] - 3, x1, 64, GATE_Z[0] - 2, STEEL)
+    fill(out, x0, 64, GATE_Z[1] + 2, x1, 64, GATE_Z[1] + 3, STEEL)
+
+
+def repair(out):
+    """Every solid block of the finished castle, in build order, reduced to
+    its final state. Air is left out, so anything a player placed in the
+    open spaces (doors, turrets, ladders) and the workstations are untouched;
+    re-placing a block resets its damage."""
+    full = []
+    walls(full)
+    towers(full, (0, 1))
+    moat(full)
+    keep(full, (0, 1))
+    ledges(full)
+    final = {}
+    for line in full:
+        f = line.split()
+        if not f or f[0] != "fill":
+            continue
+        x0, y0, z0, x1, y1, z1 = map(int, f[1:7])
+        for y in range(min(y0, y1), max(y0, y1) + 1):
+            for z in range(min(z0, z1), max(z0, z1) + 1):
+                for x in range(min(x0, x1), max(x0, x1) + 1):
+                    final[(x, y, z)] = tuple(f[7:])
+    out.append("# repair: every solid castle block at full HP")
+    # Merge runs along x of the same block to keep the file small.
+    for (x, y, z), b in sorted(final.items(), key=lambda kv: (kv[0][1], kv[0][2], kv[0][0])):
+        if b[0] == "air" or (x - 1, y, z) in final and final[(x - 1, y, z)] == b:
+            continue
+        x1 = x
+        while final.get((x1 + 1, y, z)) == b:
+            x1 += 1
+        fill(out, x, y, z, x1, y, z, *b)
+
+
 def bars_test(out):
     out.append("# bars rotation test: 3 in a row along x per rotation, inside the future keep")
     for i, rot in enumerate(range(4)):
@@ -234,6 +275,10 @@ def main():
         spikes(out)
     elif phase == "stations":
         stations(out)
+    elif phase == "repair":
+        repair(out)
+    elif phase == "ledges":
+        ledges(out)
     elif phase == "phase4":
         keep(out, (int(sys.argv[2]), int(sys.argv[3])))
     else:
