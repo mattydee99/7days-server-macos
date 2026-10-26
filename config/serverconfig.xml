@@ -44,6 +44,12 @@
   <property name="PlayerSafeZoneLevel"             value="5" />
   <property name="PlayerSafeZoneHours"             value="5" />
 
+  <!-- Sandbox options (blood moon frequency, etc.). Since 3.x the game reads
+       these from this code, not from properties like BloodMoonFrequency.
+       Format: 'A' + per option 2 letters (option index) + 1 letter (value
+       index); unlisted options keep their defaults. ABWC = blood moon every 2 days. -->
+  <property name="SandboxCode"                     value="ABWC" />
+
   <!-- Multiplayer -->
   <property name="PartySharedKillRange"            value="10000" />
   <property name="PlayerKillingMode"               value="0" />

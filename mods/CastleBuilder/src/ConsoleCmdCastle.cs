@@ -30,6 +30,7 @@ namespace CastleBuilder
                    "  castle scan <x1> <z1> <x2> <z2>  - list what 'castle strip' would remove (dry run)\n" +
                    "  castle strip <x1> <z1> <x2> <z2> - remove trees, plants, rocks and other non-terrain blocks above ground\n" +
                    "  castle build <plan> <name>      - apply /home/steam/castle/<plan> ('fill x1 y1 z1 x2 y2 z2 block [rot]' lines), saving an undo log as <name>\n" +
+                   "  castle check <plan>             - list positions where the world differs from the plan or blocks are damaged (changes nothing)\n" +
                    "  castle undo <name>              - restore every block changed by 'castle build ... <name>'\n" +
                    "  castle poc <x> <z>             - place a 3x3x3 steel cube on the ground centred on x,z\n" +
                    "  castle clear <x> <z>           - remove the 3x3x3 cube placed by 'castle poc'";
@@ -52,6 +53,11 @@ namespace CastleBuilder
             if (sub == "build" && _params.Count == 3)
             {
                 Build(_params[1], _params[2]);
+                return;
+            }
+            if (sub == "check" && _params.Count == 2)
+            {
+                Check(_params[1]);
                 return;
             }
             if (sub == "undo" && _params.Count == 2)
@@ -286,14 +292,75 @@ namespace CastleBuilder
                 Out("Undo log " + _name + " already exists; pick another name or 'castle undo " + _name + "' first");
                 return;
             }
+            World world = GameManager.Instance.World;
+            if (!ReadPlan(world, _plan, out var blocks, out var order))
+                return;
+
+            var undo = new StringBuilder();
+            var changes = new List<BlockChangeInfo>();
+            foreach (Vector3i pos in order)
+            {
+                BlockValue old = world.GetBlock(pos);
+                BlockValue bv = blocks[pos];
+                undo.Append(pos.x).Append(' ').Append(pos.y).Append(' ').Append(pos.z).Append(' ')
+                    .Append(old.rawData).Append(' ').Append(world.GetDensity(pos.x, pos.y, pos.z)).Append('\n');
+                changes.Add(new BlockChangeInfo(new BlockValueRef(pos), bv, DensityFor(bv)));
+            }
+            File.WriteAllText(undoPath, undo.ToString());
+            Apply(world, changes);
+            Out("Built " + changes.Count + " blocks from " + _plan + "; undo with 'castle undo " + _name + "'");
+        }
+
+        // Compares the world with a plan without changing anything: one line per
+        // position whose block differs ("x y z expected -> actual") or is
+        // damaged ("x y z name damage/maxDamage").
+        static void Check(string _plan)
+        {
+            if (!SafeName(_plan))
+            {
+                Out("Plan names may only contain letters, digits, '-', '_' and '.'");
+                return;
+            }
+            World world = GameManager.Instance.World;
+            if (!ReadPlan(world, _plan, out var blocks, out var order))
+                return;
+
+            var sb = new StringBuilder();
+            int wrong = 0, damaged = 0;
+            sb.AppendLine("CHECK_BEGIN " + _plan);
+            foreach (Vector3i pos in order)
+            {
+                BlockValue want = blocks[pos];
+                BlockValue have = world.GetBlock(pos);
+                string p = pos.x + " " + pos.y + " " + pos.z + " ";
+                if (have.type != want.type)
+                {
+                    wrong++;
+                    sb.Append("wrong ").Append(p).Append(want.isair ? "air" : want.Block.GetBlockName())
+                      .Append(" -> ").AppendLine(have.isair ? "air" : have.Block.GetBlockName());
+                }
+                else if (have.damage > 0)
+                {
+                    damaged++;
+                    sb.Append("damaged ").Append(p).Append(have.Block.GetBlockName()).Append(' ')
+                      .Append(have.damage).Append('/').Append(have.Block.MaxDamage).Append('\n');
+                }
+            }
+            sb.Append("CHECK_END positions=").Append(order.Count).Append(" wrong=").Append(wrong)
+              .Append(" damaged=").Append(damaged);
+            Out(sb.ToString());
+        }
+
+        static bool ReadPlan(World _world, string _plan, out Dictionary<Vector3i, BlockValue> blocks,
+            out List<Vector3i> order)
+        {
+            blocks = new Dictionary<Vector3i, BlockValue>();
+            order = new List<Vector3i>();
             string[] lines;
             try { lines = File.ReadAllLines(Dir + _plan); }
-            catch (IOException e) { Out("Cannot read plan: " + e.Message); return; }
+            catch (IOException e) { Out("Cannot read plan: " + e.Message); return false; }
 
-            World world = GameManager.Instance.World;
             var cache = new Dictionary<string, BlockValue>();
-            var blocks = new Dictionary<Vector3i, BlockValue>();
-            var order = new List<Vector3i>();
             for (int n = 0; n < lines.Length; n++)
             {
                 string line = lines[n].Trim();
@@ -310,7 +377,7 @@ namespace CastleBuilder
                 if (!ok)
                 {
                     Out("Plan line " + (n + 1) + " is malformed: " + line);
-                    return;
+                    return false;
                 }
                 if (!cache.TryGetValue(f[7], out BlockValue bv))
                 {
@@ -318,7 +385,7 @@ namespace CastleBuilder
                     if (!bv.isair && bv.type == 0)
                     {
                         Out("Plan line " + (n + 1) + ": unknown block " + f[7]);
-                        return;
+                        return false;
                     }
                     cache[f[7]] = bv;
                 }
@@ -331,7 +398,7 @@ namespace CastleBuilder
                     if (y < 1 || y > 254)
                     {
                         Out("Plan line " + (n + 1) + ": y out of range");
-                        return;
+                        return false;
                     }
                     if (!blocks.ContainsKey(pos))
                         order.Add(pos);
@@ -340,26 +407,14 @@ namespace CastleBuilder
             }
             foreach (Vector3i pos in order)
             {
-                if (!Loaded(world, pos.x, pos.z))
+                if (!Loaded(_world, pos.x, pos.z))
                 {
                     Out("Chunk at " + pos.x + "," + pos.z + " is not loaded; run 'castle load' first");
-                    return;
+                    return false;
                 }
             }
 
-            var undo = new StringBuilder();
-            var changes = new List<BlockChangeInfo>();
-            foreach (Vector3i pos in order)
-            {
-                BlockValue old = world.GetBlock(pos);
-                BlockValue bv = blocks[pos];
-                undo.Append(pos.x).Append(' ').Append(pos.y).Append(' ').Append(pos.z).Append(' ')
-                    .Append(old.rawData).Append(' ').Append(world.GetDensity(pos.x, pos.y, pos.z)).Append('\n');
-                changes.Add(new BlockChangeInfo(new BlockValueRef(pos), bv, DensityFor(bv)));
-            }
-            File.WriteAllText(undoPath, undo.ToString());
-            Apply(world, changes);
-            Out("Built " + changes.Count + " blocks from " + _plan + "; undo with 'castle undo " + _name + "'");
+            return true;
         }
 
         static void Undo(string _name)
