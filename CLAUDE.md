@@ -128,7 +128,7 @@ docker exec 7days console.sh "castle unload 542 335"          # always remove th
 
 **Repairing the castle:** `python3 tools/castle_plan.py repair` writes every solid castle block (steel, bars, spikes) in its final state, then `castle build repair.txt repair-<n>` re-places them all at full HP. Air positions are left out, so player-placed blocks in open space and the workstations are untouched. A player block that was destroyed is not restored. No restart is needed, so it can be run between horde waves. Run `castle check repair.txt` before (to see what was damaged) and after (should report `wrong=0 damaged=0`).
 
-**Test spawns:** `spawnentityat <zombieName> 587 60 <z>` puts zombies on the road east of the gate, and `spawnwandering h` spawns a real wandering horde, which heads for players from wherever the game chooses. In testing (2026-10-25, 50+ zombies including ferals, spiders and a night horde), every zombie that reached the castle used the gate and the bridge. None touched the walls, and most died on the spikes after being shoved off the bridge while stacking at a door. Spiders jump but don't climb. Turrets on the y=64 ledges can't hit the landing or the nearest door: they tilt at most 45° down, and also need 15W of power and ammo. The first real blood moon (day 102) did no damage to the outside, but `castle check` found 7 spikes destroyed under the east end of the bridge, the bridge worn 10–25%, steel destroyed at the gate edges of the east wall, and 4 blocks dug out of the inner face of the west wall, by zombies that had fallen into the moat and walked the loop around the keep.
+**Test spawns:** `spawnentityat <zombieName> 587 60 <z>` puts zombies on the road east of the gate, and `spawnwandering h` spawns a real wandering horde, which heads for players from wherever the game chooses. In testing (2026-10-25, 50+ zombies including ferals, spiders and a night horde), every zombie that reached the castle used the gate and the bridge. None touched the walls, and most died on the spikes after being shoved off the bridge while stacking at a door. Spiders jump but don't climb. Turrets on the y=64 ledges can't hit the landing or the nearest door: they tilt at most 45° down, and also need 15W of power and ammo. The first real blood moon (day 102) did no damage to the outside, but `castle check` found 7 spikes destroyed under the east end of the bridge, the bridge worn 10–25%, steel destroyed at the gate edges of the east wall, and 4 blocks dug out of the inner face of the west wall, by zombies that had fallen into the moat and walked the loop around the keep. The day-104 blood moon damaged the same places (8 steel blocks at the east-wall gate edges and the inner west wall, 5 spikes destroyed and 16 worn under the bridge); `repair` fixed it all.
 
 Things learned building it:
 - `steelShapes:<shape>` gives every shape in steel (10,000 HP), e.g. `steelShapes:barsCentered`. For bars, rotation 0 runs the panel along x (east–west), rotation 1 along z.
@@ -172,10 +172,12 @@ Things learned building it:
 
 ## Current status: WORKING
 
-As of 2026-09-05 (game build 24994542, the "v3.2" era), the server starts,
-registers a real EOS session (`[EOS] Server registered, session: ...`), and a
-real game client has successfully connected by direct IP over LAN. No
-`EOS_NoConnection` or `Failed creating session` errors.
+As of 2026-10-26 the server runs game V 3.4.0 (b6), build 26167630, updated
+from 3.2 with the "Updating the game" steps: it registers a real EOS session
+(`[EOS] Server registered, session: ...`), loads the existing `3.2new` save
+(no fresh world), the CastleBuilder mod compiles and loads unchanged, and a
+real client has played on it. A real client first connected by direct IP over
+LAN on 2026-09-05 (build 24994542, v3.2).
 
 ### Why the stub/wrapper approaches failed (do not re-attempt without new evidence)
 
