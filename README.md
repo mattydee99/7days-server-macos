@@ -2,6 +2,15 @@
 
 Runs a 7 Days to Die dedicated server in Docker on Apple Silicon (M-series Mac) using **box64** with the real, unmodified Linux **EOS SDK** — no stub, no crossplay trade-off.
 
+Tested with game V 3.4.0 (b6, build 26167630) on a Mac Mini M4; real clients have joined and played on it.
+
+## Requirements
+
+- An Apple Silicon Mac (M1 or later)
+- Docker Desktop or OrbStack. Give the Docker VM **at least 16 GB of memory**: the server's memory use grows to ~4.5 GB over a long session, and with less headroom the VM's kernel can OOM-kill it (Docker Desktop → Settings → Resources → Memory).
+- [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD) to download the server files (~16 GB). The game files are not part of this repo.
+- Optional: an S3 bucket and AWS credentials for save backups
+
 ## How it works
 
 The 7D2D server binary is Linux x86_64-only. Getting it to run on ARM64, joinable, with a working EOS session required solving three problems:
@@ -66,7 +75,12 @@ S3_BACKUP_BUCKET=your-bucket-name      # optional, for save backups
 AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 AWS_DEFAULT_REGION=us-west-2
+BACKUP_RETAIN=7                        # nightly backups to keep
 ```
+
+Leave `S3_BACKUP_BUCKET` empty to skip backups entirely.
+
+Then edit `config/serverconfig.xml` to taste — at least `ServerName`, `ServerDescription`, `GameWorld` and `GameName`. Since 3.x, gameplay options such as blood moon frequency are set through the `SandboxCode` property (see `CLAUDE.md`).
 
 ### 3. Build and run
 
@@ -131,7 +145,10 @@ docker compose up -d --build --force-recreate
 
 Game saves are bind-mounted to `./saves/` on the host (gitignored). They persist across container restarts and rebuilds.
 
-On clean shutdown (`docker compose down`, or `docker stop`), the entrypoint traps SIGTERM and syncs saves to S3 before exiting. The `stop_grace_period: 5m` in `docker-compose.yml` gives it time to finish.
+If `S3_BACKUP_BUCKET` is set:
+
+- **Nightly backups** run at 03:00 UTC (`docker/backup.sh`) into dated `s3://$S3_BACKUP_BUCKET/backups/<timestamp>/` prefixes, keeping the newest `BACKUP_RETAIN`. Trigger one on demand with `docker exec 7days backup.sh` (add `--retain N` to override retention for that run).
+- **On clean shutdown** (`docker compose down`, or `docker stop`), the entrypoint traps SIGTERM and syncs saves to `s3://$S3_BACKUP_BUCKET/saves/` before exiting. The `stop_grace_period: 5m` in `docker-compose.yml` gives it time to finish.
 
 To restore from S3:
 
@@ -151,6 +168,22 @@ aws s3 sync s3://$S3_BACKUP_BUCKET/saves/ ./saves/
 
 ---
 
+## Server console
+
+```bash
+docker exec 7days console.sh "<command>"   # e.g. "help", "lp", "gso"
+```
+
+---
+
+## Optional extras
+
+- **CastleBuilder mod** (`mods/CastleBuilder/`) — a small server-side mod that adds a `castle` console command for surveying terrain and placing a generated fortified base (`tools/castle_plan.py` generates the layouts). It's compiled against the game's DLLs during `docker compose build`. It shows how to build a server-side mod in this setup; if you don't want it, delete `mods/CastleBuilder/`.
+- **Claude Code skills** (`.claude/skills/`) — procedures for updating the game and running the castle tooling, for use with [Claude Code](https://claude.com/claude-code). `CLAUDE.md` holds the detailed troubleshooting notes (EOS CA-root checks, OOM diagnosis, `SandboxCode` format).
+- **`PLAN.md`** — the debugging log of how this setup was worked out, including the approaches that didn't work.
+
+---
+
 ## Project structure
 
 ```
@@ -158,14 +191,22 @@ aws s3 sync s3://$S3_BACKUP_BUCKET/saves/ ./saves/
 ├── config/
 │   └── serverconfig.xml    # Server config — env vars substituted at startup
 ├── docker/
-│   ├── Dockerfile          # Single-stage arm64 build: box64 + BOX64_DYNAREC tuning, real EOS SDK untouched
-│   └── entrypoint.sh       # cd to game dir, box64 launch, SIGTERM → S3 backup
-├── eos-stub/                # Historical artifact from an earlier (non-joinable) approach; unused by docker/Dockerfile
-│   ├── eos_stub.c
-│   └── eos.map
+│   ├── Dockerfile          # arm64 build: compiles mods, box64 + BOX64_DYNAREC tuning, real EOS SDK untouched
+│   ├── entrypoint.sh       # cd to game dir, box64 launch, nightly backup schedule, SIGTERM → S3 sync
+│   ├── backup.sh           # Dated S3 backup + retention pruning
+│   └── console.sh          # Send a command to the server console
+├── mods/CastleBuilder/     # Optional example server-side mod
+├── tools/castle_plan.py    # Layout generator for the castle mod
+├── eos-stub/               # Historical artifact from an earlier (non-joinable) approach; unused by docker/Dockerfile
 ├── saves/                  # Gitignored — game saves (host-mounted)
 ├── server/                 # Gitignored — pre-downloaded Linux server files (~16GB)
 ├── docker-compose.yml
 ├── .env                    # Gitignored — secrets
 └── .env.example
 ```
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE). This covers the files in this repo only. 7 Days to Die and its dedicated server are © The Fun Pimps, and the EOS SDK is © Epic Games; neither is included or redistributed here. This project isn't affiliated with either.
