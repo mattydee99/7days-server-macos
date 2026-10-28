@@ -18,7 +18,7 @@ A Docker setup to run the Linux x86_64 7 Days to Die dedicated server on Apple S
 2. Download the Linux x86_64 dedicated server files (~16 GB) into `server/`:
    ```bash
    steamcmd \
-     +force_install_dir /path/to/7days-docker/server \
+     +force_install_dir /path/to/7days-server-macos/server \
      +@sSteamCmdForcePlatformType linux \
      +login anonymous \
      +app_update 294420 \

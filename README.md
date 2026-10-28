@@ -1,8 +1,15 @@
-# 7 Days to Die — Docker Server on Apple Silicon
+# 7 Days to Die Dedicated Server on macOS (Apple Silicon)
 
-Runs a 7 Days to Die dedicated server in Docker on Apple Silicon (M-series Mac) using **box64** with the real, unmodified Linux **EOS SDK** — no stub, no crossplay trade-off.
+Run a **joinable 7 Days to Die dedicated server on an M-series Mac**. The official Linux x86_64 server runs in an ARM64 Docker container under the [box64](https://github.com/ptitSeb/box64) emulator, with the real, unmodified **EOS SDK**: no stub, and crossplay still works.
+
+- ✅ EOS session registers, so the server shows up and clients can join
+- ✅ Steam auth, saves and crossplay all work
+- ✅ Optional nightly S3 backups, plus a backup on shutdown
+- ✅ Builds server-side C# mods against the game's DLLs
 
 Tested with game V 3.4.0 (b6, build 26167630) on a Mac Mini M4; real clients have joined and played on it.
+
+**Quick start:** `git clone https://github.com/mattydee99/7days-server-macos.git`, download the server files with SteamCMD, `cp .env.example .env`, then `docker compose up -d --build`. Details below.
 
 ## Requirements
 
@@ -13,7 +20,7 @@ Tested with game V 3.4.0 (b6, build 26167630) on a Mac Mini M4; real clients hav
 
 ## How it works
 
-The 7D2D server binary is Linux x86_64-only. Getting it to run on ARM64, joinable, with a working EOS session required solving three problems:
+The 7D2D server binary is Linux x86_64-only. Getting it to run on ARM64, joinable, with a working EOS session required solving four problems:
 
 1. **EOS SDK used to hang under box64** — the real EOS SDK's async completion callbacks would wedge indefinitely under box64's default dynarec settings. **Fix:** set `BOX64_DYNAREC_STRONGMEM=2`, `BOX64_DYNAREC_BLEEDING_EDGE=0`, `BOX64_DYNAREC_BIGBLOCK=0` (baked into `docker/Dockerfile`). With these, the real `libEOSSDK-Linux-Shipping.so` initializes and ticks correctly.
 
@@ -51,7 +58,7 @@ Download the Linux x86_64 server files to `server/` (~16GB, gitignored):
 
 ```bash
 steamcmd \
-  +force_install_dir /path/to/7days-docker/server \
+  +force_install_dir /path/to/7days-server-macos/server \
   +@sSteamCmdForcePlatformType linux \
   +login anonymous \
   +app_update 294420 \
@@ -130,7 +137,7 @@ Re-run SteamCMD (only fetches changed files), then rebuild:
 
 ```bash
 steamcmd \
-  +force_install_dir /path/to/7days-docker/server \
+  +force_install_dir /path/to/7days-server-macos/server \
   +@sSteamCmdForcePlatformType linux \
   +login anonymous \
   +app_update 294420 \

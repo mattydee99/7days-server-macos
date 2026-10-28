@@ -13,7 +13,7 @@ docker exec 7days backup.sh
 
 # 1. Pull the new build into server/ with SteamCMD
 steamcmd \
-  +force_install_dir /path/to/7days-docker/server \
+  +force_install_dir /path/to/7days-server-macos/server \
   +@sSteamCmdForcePlatformType linux \
   +login anonymous \
   +app_update 294420 \

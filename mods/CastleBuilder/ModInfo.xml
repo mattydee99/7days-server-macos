@@ -3,7 +3,7 @@
 	<Name value="CastleBuilder" />
 	<DisplayName value="Castle Builder" />
 	<Description value="Server-side console command for surveying terrain and placing generated structures" />
-	<Author value="7days-docker" />
+	<Author value="mattydee99" />
 	<Version value="0.1.0" />
 	<Website value="" />
 </xml>
