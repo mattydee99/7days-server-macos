@@ -69,12 +69,10 @@ Use the `castle` skill (`.claude/skills/castle/SKILL.md`) for console commands (
 
 ## Current status: WORKING
 
-As of 2026-10-26 the server runs game V 3.4.0 (b6), build 26167630, updated
-from 3.2 with the "Updating the game" steps: it registers a real EOS session
-(`[EOS] Server registered, session: ...`), loads the existing `3.2new` save
-(no fresh world), the CastleBuilder mod compiles and loads unchanged, and a
-real client has played on it. A real client first connected by direct IP over
-LAN on 2026-09-05 (build 24994542, v3.2).
+Tested with game V 3.2 and V 3.4.0: the server registers a real EOS session
+(`[EOS] Server registered, session: ...`), existing saves load across the
+3.2 → 3.4 update, the CastleBuilder mod compiles and loads unchanged, and real
+clients have connected and played on it.
 
 ### Why the stub/wrapper approaches failed (do not re-attempt without new evidence)
 
