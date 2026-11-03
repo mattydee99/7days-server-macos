@@ -69,8 +69,9 @@ Use the `castle` skill (`.claude/skills/castle/SKILL.md`) for console commands (
 
 ## Current status: WORKING
 
-As of 2026-10-26 the server runs game V 3.4.0 (b6), build 26167630, updated
-from 3.2 with the "Updating the game" steps: it registers a real EOS session
+As of 2026-11-03 the server runs game V 3.4.0 (b10), build 26310339 (3.4.0
+b6, build 26167630, went in on 2026-10-26 as the update from 3.2), updated
+with the "Updating the game" steps: it registers a real EOS session
 (`[EOS] Server registered, session: ...`), loads the existing `3.2new` save
 (no fresh world), the CastleBuilder mod compiles and loads unchanged, and a
 real client has played on it. A real client first connected by direct IP over
